@@ -1,0 +1,10 @@
+# Auto-Issue 测试环境配置
+# 由 SKILL.md Phase 1.5 自动生成，也可手动创建
+# 路径: .claude/.test-env
+
+PROJECT_TYPE="Python + FastAPI"
+SRC_DIRS="src/"
+TEST_DIRS="tests/"
+UNIT_TEST_CMD="uv run pytest tests/unit/ -q --tb=line"
+INTEGRATION_TEST_CMD="uv run pytest tests/integration/ -q --tb=line"
+E2E_TEST_CMD="npx playwright test --reporter=line"

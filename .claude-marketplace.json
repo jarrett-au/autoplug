@@ -1,0 +1,9 @@
+{
+  "name": "autoplug",
+  "description": "Claude Code 自动化能力插件集",
+  "author": {
+    "name": "Jarrett",
+    "email": "zhongyu.ou@gmail.com"
+  },
+  "plugins": ["auto-issue", "agent-evolve"]
+}
