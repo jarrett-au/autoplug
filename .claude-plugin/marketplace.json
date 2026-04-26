@@ -1,9 +1,33 @@
 {
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "autoplug",
-  "description": "Claude Code 自动化能力插件集",
-  "author": {
+  "description": "Claude Code 自动化能力插件集 — Coding Pipeline + Agent Evolution",
+  "owner": {
     "name": "Jarrett",
     "email": "zhongyu.ou@gmail.com"
   },
-  "plugins": ["auto-issue", "agent-evolve"]
+  "plugins": [
+    {
+      "name": "auto-issue",
+      "description": "全自动 issue 处理 pipeline + 大需求拆分：影响域分析 → TDD 开发 → 验证 → 审查 → PR（按需）| 需求拆分 → GitHub Issues",
+      "version": "8.0.0",
+      "author": {
+        "name": "Jarrett",
+        "email": "zhongyu.ou@gmail.com"
+      },
+      "source": "./plugins/auto-issue",
+      "category": "development"
+    },
+    {
+      "name": "agent-evolve",
+      "description": "Agent 自动进化工具：自省迭代循环 + 知识提炼与 Skill/Agent/Hook/Plugin 自动创建",
+      "version": "1.0.0",
+      "author": {
+        "name": "Jarrett",
+        "email": "zhongyu.ou@gmail.com"
+      },
+      "source": "./plugins/agent-evolve",
+      "category": "productivity"
+    }
+  ]
 }
