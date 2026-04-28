@@ -1,11 +1,18 @@
 #!/usr/bin/env bash
 # test-gate.sh — Auto-Issue 测试门脚本
 # 由 autoissue-developer 的 SubagentStop hook 自动调用
-# 优先级: Makefile → .claude/.test-env → 自动检测
+# 读取 .claude/.test-env 获取项目配置，或自动检测
 
 set -euo pipefail
 
 cd "${CLAUDE_PROJECT_DIR:-.}"
+
+# ── 加载配置 ──
+TEST_ENV=".claude/.test-env"
+if [[ -f "$TEST_ENV" ]]; then
+  # shellcheck source=/dev/null
+  source "$TEST_ENV"
+fi
 
 # ── 颜色 ──
 RED='\033[0;31m'
@@ -33,55 +40,14 @@ run_test() {
   fi
 }
 
-# ── 检查 Makefile 中是否包含指定 target ──
-makefile_has_target() {
-  local target="$1"
-  [[ -f "Makefile" ]] && grep -qE "^[[:space:]]*${target}[[:space:]]*:" Makefile
-}
-
-# ── 优先级 1: Makefile ──
-if [[ -f "Makefile" ]]; then
-  make_cmd=""
-  make_name=""
-
-  # 优先级: check > ui-check > test (check 通常整合了 lint+format+test)
-  if makefile_has_target "check"; then
-    make_cmd="make check"
-    make_name="make check"
-  elif makefile_has_target "ui-check"; then
-    make_cmd="make ui-check"
-    make_name="make ui-check"
-  elif makefile_has_target "test"; then
-    make_cmd="make test"
-    make_name="make test"
-  fi
-
-  if [[ -n "$make_cmd" ]]; then
-    echo -e "${YELLOW}⚠ 检测到 Makefile，优先使用 ${make_name}${NC}"
-    run_test "${make_name}" "$make_cmd"
-  fi
-fi
-
-# ── 优先级 2: .claude/.test-env 配置 ──
-TEST_ENV=".claude/.test-env"
-if [[ -f "$TEST_ENV" ]]; then
-  # shellcheck source=/dev/null
-  source "$TEST_ENV"
-
-  # 如果 Makefile 已有覆盖命令，跳过 test-env（避免重复）
-  if [[ -n "${make_cmd:-}" ]]; then
-    echo -e "${YELLOW}ℹ Makefile 已覆盖测试执行，跳过 .test-env 配置${NC}"
-  elif [[ -n "${UNIT_TEST_CMD:-}" ]]; then
-    echo -e "${YELLOW}ℹ 使用 .claude/.test-env 配置${NC}"
-    run_test "单元测试" "$UNIT_TEST_CMD"
-    run_test "集成测试" "${INTEGRATION_TEST_CMD:-}"
-    run_test "E2E 测试" "${E2E_TEST_CMD:-}"
-  fi
-fi
-
-# ── 优先级 3: 自动检测（仅当上面两级都没命中时） ──
-if [[ -z "${make_cmd:-}" && ! -f "$TEST_ENV" ]]; then
-  echo -e "${YELLOW}⚠ 未找到 Makefile target 和 .claude/.test-env，自动检测项目类型${NC}\n"
+# ── 如果有配置文件，按配置执行 ──
+if [[ -n "${UNIT_TEST_CMD:-}" ]]; then
+  run_test "单元测试" "$UNIT_TEST_CMD"
+  run_test "集成测试" "${INTEGRATION_TEST_CMD:-}"
+  run_test "E2E 测试" "${E2E_TEST_CMD:-}"
+else
+  # ── 自动检测项目类型 ──
+  echo -e "${YELLOW}⚠ 未找到 .claude/.test-env，自动检测项目类型${NC}\n"
 
   if [[ -f "pyproject.toml" ]] || [[ -f "setup.py" ]]; then
     # Python 项目
@@ -110,7 +76,7 @@ if [[ -z "${make_cmd:-}" && ! -f "$TEST_ENV" ]]; then
     run_test "单元测试" "go test ./..."
 
   else
-    echo -e "${RED}✗ 无法识别项目类型，请创建 .claude/.test-env 或在 Makefile 中添加 test target${NC}"
+    echo -e "${RED}✗ 无法识别项目类型，请创建 .claude/.test-env 配置测试命令${NC}"
     fail=1
   fi
 fi
