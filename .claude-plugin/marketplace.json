@@ -10,7 +10,7 @@
     {
       "name": "auto-issue",
       "description": "全自动 issue 处理 pipeline + 大需求拆分：影响域分析 → TDD 开发 → 验证 → 审查 → PR（按需）| 需求拆分 → GitHub Issues",
-      "version": "8.0.0",
+      "version": "1.0.0",
       "author": {
         "name": "Jarrett",
         "email": "zhongyu.ou@gmail.com"
