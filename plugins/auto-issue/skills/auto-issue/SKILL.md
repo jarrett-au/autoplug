@@ -97,7 +97,7 @@ E2E_TEST_CMD="<Makefile 或 报告中的 E2E 测试命令，无则留空>"
 
 ```bash
 mkdir -p .claude/scripts
-PLUGIN_DIR="$HOME/.claude/plugins/autoplug/auto-issue"
+PLUGIN_DIR="$HOME/.claude/plugins/marketplaces/autoplug/plugins/auto-issue"
 if [[ -f "$PLUGIN_DIR/skills/auto-issue/scripts/test-gate.sh" ]]; then
   cp "$PLUGIN_DIR/skills/auto-issue/scripts/test-gate.sh" .claude/scripts/test-gate.sh
   chmod +x .claude/scripts/test-gate.sh
