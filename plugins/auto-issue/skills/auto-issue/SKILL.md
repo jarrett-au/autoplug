@@ -73,10 +73,16 @@ E2E_TEST_CMD="<报告中的 E2E 测试命令，无则留空>"
 
 ```bash
 mkdir -p .claude/scripts
-find .claude/plugins -path "*/auto-issue/scripts/test-gate.sh" -exec cp {} .claude/scripts/test-gate.sh \; 2>/dev/null \
-  || find .claude/skills -path "*/auto-issue/scripts/test-gate.sh" -exec cp {} .claude/scripts/test-gate.sh \; 2>/dev/null \
-  || echo "⚠️ 未找到 test-gate.sh，请确认 auto-issue plugin 已安装"
-chmod +x .claude/scripts/test-gate.sh
+PLUGIN_DIR="$HOME/.claude/plugins/autoplug/auto-issue"
+if [[ -f "$PLUGIN_DIR/skills/auto-issue/scripts/test-gate.sh" ]]; then
+  cp "$PLUGIN_DIR/skills/auto-issue/scripts/test-gate.sh" .claude/scripts/test-gate.sh
+  chmod +x .claude/scripts/test-gate.sh
+else
+  # fallback: 兼容 skill 安装路径
+  find "$HOME/.claude" -path "*/auto-issue/scripts/test-gate.sh" -exec cp {} .claude/scripts/test-gate.sh \; 2>/dev/null \
+    && chmod +x .claude/scripts/test-gate.sh \
+    || echo "⚠️ 未找到 test-gate.sh，请确认 auto-issue plugin 已安装"
+fi
 ```
 
 ---
