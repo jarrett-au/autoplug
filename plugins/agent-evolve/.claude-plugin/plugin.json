@@ -1,6 +1,7 @@
 {
   "name": "agent-evolve",
-  "description": "Agent 自动进化工具：自省迭代循环 + 知识提炼与 Skill/Agent/Hook/Plugin 自动创建",
+  "version": "1.1.0",
+  "description": "Agent 自动进化工具：自省迭代循环 + 跨会话模式挖掘 + 知识提炼与 Skill/Agent/Hook/Plugin 自动创建",
   "author": {
     "name": "Jarrett",
     "email": "zhongyu.ou@gmail.com"

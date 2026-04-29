@@ -30,6 +30,7 @@ claude plugin install agent-evolve
 | Skill | 用途 |
 |-------|------|
 | `/self-critique-loop` | 自省迭代循环：从目标受众视角审视产出，迭代直到 genuine aha |
+| `/session-archaeologist` | 跨会话模式挖掘：从项目记忆和代码历史中发现隐藏模式（"surprise me"） |
 | `/skill-auto-discover` | 知识提炼：从对话中提取有价值的知识点，自动创建/更新 Skill/Agent/Hook/Plugin |
 
 核心闭环：**做事 → 自省（发现不足） → 固化（创建 Skill） → 下次更好**。
