@@ -1,0 +1,9 @@
+{
+  "name": "code-quality",
+  "version": "1.0.0",
+  "description": "代码质量工具集：深度审查 + AI 报告验证 + 闭环修复 + 测试编写 + 规格文档 + Rules 生成 + 项目脚手架",
+  "author": {
+    "name": "Jarrett",
+    "email": "zhongyu.ou@gmail.com"
+  }
+}
