@@ -25,6 +25,29 @@ To achieve this, you must **autonomously orchestrate** your available tools (`gi
 
 You are expected to think critically and loop through **Observation → Hypothesis → Verification** until you are satisfied.
 
+### Step 0: Load Requirements Context (⚠️ 如果存在则必须读取)
+
+**在分析任何代码之前**，检查是否存在审查上下文文件：
+
+```bash
+# 查找当前 session 的审查目录
+SESSION_ID=${REVIEW_LOOP_SESSION_ID:-}
+if [ -n "$SESSION_ID" ] && [ -d ".review-loop/$SESSION_ID" ]; then
+  CONTEXT_FILE=".review-loop/$SESSION_ID/context.json"
+elif ls .review-loop/*/context.json 1>/dev/null 2>&1; then
+  CONTEXT_FILE=$(ls -t .review-loop/*/context.json 2>/dev/null | head -1)
+fi
+
+if [ -n "${CONTEXT_FILE:-}" ]; then
+  cat "$CONTEXT_FILE"
+fi
+```
+
+如果找到 context.json：
+- **用需求理解代码改动的意图**——某些看似不寻常的代码选择可能是为了满足特定需求
+- **注意需求状态**——某些需求可能已被标记为 `covered`，避免重复报告
+- **需求是参考信号**——不要因需求否定明显更优的实现
+
 ### Step 1: Context Acquisition (Auto-Detect)
 
 **Analyze the user's intent**: Are they asking for a PR review (Remote) or a local check (Local)?
@@ -66,6 +89,7 @@ Evaluate the *holistic* change (Diff + Context) against:
 2. **Security**: Injection, IDOR, Secrets, PII leaks
 3. **Performance**: N+1 queries, heavy loops in hot paths
 4. **Idiomatic Code**: Standard practices for the specific language (Python PEP8, Go conventions, etc.)
+5. **Requirements Alignment** *(仅当存在 context.json 时)*: 需求清单中的每个要点是否都有对应的代码变更？是否有需求之外的不必要改动（scope creep）？
 
 ## 📝 Output Protocol (Strict Format)
 
@@ -82,12 +106,20 @@ Dynamic title based on context:
 ```markdown
 > **状态**: 🟢 (Ready) / 🔴 (Request Changes)
 > **风险**: 🔴/🟡/🟢
+> **需求覆盖**: X/Y 项已覆盖 *(仅当存在 context.json 时)*
 > **概要**: [Executive summary based on your DEEP investigation]
 ```
 
 ### Findings
 
 - Use `### 🔍 需关注问题` for bugs/risks
+- **If context.json exists**, use `### 📋 需求覆盖检查` for requirements coverage:
+  ```markdown
+  ### 📋 需求覆盖检查
+  - ✅ 支持批量删除用户 — `src/api/batch-delete.ts`
+  - ❌ 删除前需要确认弹窗 — 未找到对应实现
+  - ✅ 记录操作审计日志 — `src/middleware/audit.ts`
+  ```
 - **MANDATORY**: Include:
   - File Path
   - Code Snippet

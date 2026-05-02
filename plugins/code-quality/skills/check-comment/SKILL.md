@@ -28,6 +28,21 @@ AI review 工具常见的误判模式：
 - 调用方代码（理解函数在什么上下文中被调用）
 - 测试文件（理解现有测试覆盖了哪些场景）
 - 项目的架构规则和设计文档（如果存在）
+- **审查上下文文件**（如果 `.review-loop/*/context.json` 存在，读取需求上下文作为验证参考——特别是当报告涉及需求覆盖判断时）
+
+**读取审查上下文：**
+```bash
+SESSION_ID=${REVIEW_LOOP_SESSION_ID:-}
+if [ -n "$SESSION_ID" ] && [ -d ".review-loop/$SESSION_ID" ]; then
+  CONTEXT_FILE=".review-loop/$SESSION_ID/context.json"
+elif ls .review-loop/*/context.json 1>/dev/null 2>&1; then
+  CONTEXT_FILE=$(ls -t .review-loop/*/context.json 2>/dev/null | head -1)
+fi
+
+if [ -n "${CONTEXT_FILE:-}" ]; then
+  cat "$CONTEXT_FILE"
+fi
+```
 
 ### 第二步：逐项分析
 

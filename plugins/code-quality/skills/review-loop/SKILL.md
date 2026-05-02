@@ -14,9 +14,15 @@ allowed-tools: Read, Grep, Glob, Bash, Write, Edit
 
 ---
 
-## 一、整体框架：四阶段闭环
+## 一、整体框架：五阶段闭环
 
 ```
+┌─────────────────────────────────────────────────────┐
+│  阶段0: 上下文初始化                                  │
+│  → 获取 session ID，提取需求，初始化审查目录          │
+└─────────────────┬───────────────────────────────────┘
+                  │
+                  ▼
 ┌─────────────────────────────────────────────────────┐
 │  阶段1: Code Review                                  │
 │  → 激活 code-review 技能，产出中文审查报告            │
@@ -37,11 +43,67 @@ allowed-tools: Read, Grep, Glob, Bash, Write, Edit
                   ▼
 ┌─────────────────────────────────────────────────────┐
 │  阶段4: 测试验证                                     │
-│  → make test，通过则提交，进入下一轮；否则修复后重测  │
+│  → make test，通过则提交，更新上下文，进入下一轮       │
+│    否则修复后重测                                    │
 └─────────────────┬───────────────────────────────────┘
                   │
                   └──────► 回到阶段1（直到满足终止条件）
 ```
+
+---
+
+## 零、阶段 0：上下文初始化（准备层）
+
+在开始审查循环之前，完成所有准备工作。
+
+### 0.1 获取 Session ID
+
+```bash
+# 优先使用 SessionStart hook 注入的 session ID
+# fallback 使用时间戳 + 随机数
+SESSION_ID=${REVIEW_LOOP_SESSION_ID:-$(date +%Y%m%d-%H%M%S)-$$}
+REVIEW_DIR=".review-loop/$SESSION_ID"
+mkdir -p "$REVIEW_DIR"
+```
+
+**启动时告知用户：**
+```
+🔧 Review Loop 已启动
+📁 审查目录: .review-loop/$SESSION_ID
+```
+
+### 0.2 提取需求上下文
+
+自动从以下来源提取需求（按优先级）：
+
+| 优先级 | 来源 | 获取方式 |
+|--------|------|----------|
+| 1 | PR description | `gh pr view --json body` |
+| 2 | 关联 issue | 从 PR body 提取 `Fixes #N` / `Closes #N`，然后 `gh issue view N` |
+| 3 | Commit messages | `git log main..HEAD --format="%s%n%b"` |
+| 4 | 无可用需求 | 跳过，告知用户可手动提供 |
+
+**用户也可直接提供需求**——如果用户在启动时给出了需求描述，直接使用。
+
+### 0.3 写入 context.json
+
+```json
+{
+  "session_id": "{session-id}",
+  "source": "PR #42 description / commit messages / 手动提供",
+  "requirements": [
+    {"text": "支持批量删除用户", "status": "pending"},
+    {"text": "删除前需要确认弹窗", "status": "pending"},
+    {"text": "记录操作审计日志", "status": "pending"}
+  ],
+  "scope_note": "可选：补充说明（如只处理前端，后端由另一个 PR 完成）",
+  "rounds_completed": 0
+}
+```
+
+写入路径：`.review-loop/{session-id}/context.json`
+
+**需求是参考信号，不是硬性标准。** 用于理解代码意图、检查覆盖、避免误报。不因需求否定明显更优的实现。
 
 ---
 
@@ -61,10 +123,11 @@ git diff main...HEAD --name-only
 
 产出一份完整的中文审查报告，包含：
 - 变更概述（文件列表、行数统计）
+- **需求覆盖检查**（逐条核对 context.json 中的需求要点，标记 covered/missing）
 - 需关注问题（按严重程度排序）
 - 次要建议（可选优化项）
 
-将报告内容保存在内存中，作为下一阶段的输入。
+将报告内容保存在 `.review-loop/{session-id}/round-{N}-review.md`，作为下一阶段的输入。
 
 ---
 
@@ -79,6 +142,7 @@ git diff main...HEAD --name-only
 | 问题真实性 | 读取实际代码，确认问题是否真实存在 |
 | 严重程度 | 评估是"必须修复"、"建议修复"还是"可忽略" |
 | 修复合理性 | 修复建议是否可行，是否有更好的方案 |
+| 需求准确性 | 如果报告涉及需求覆盖判断，读取 context.json 验证结论是否准确 |
 
 ### 3.2 输出格式
 
@@ -89,6 +153,8 @@ git diff main...HEAD --name-only
 | 采纳 | 问题真实，建议合理，立即修复 | 变量遮蔽风险 |
 | 部分采纳 | 问题真实但建议需调整 | 添加日志而非报错 |
 | 不采纳 | 误报或优先级过低 | 合理的防御性编程 |
+
+将结论保存至 `.review-loop/{session-id}/round-{N}-verdict.md`。
 
 ---
 
@@ -127,8 +193,13 @@ make ui-check  # 前端变动执行
 
 | 测试结果 | 处理方式 |
 |---------|---------|
-| 全部通过 | 提交 commit，进入下一轮循环 |
+| 全部通过 | 提交 commit，更新 context.json 中的需求状态，进入下一轮循环 |
 | 部分失败 | 分析失败原因，修复后重新运行直到通过 |
+
+**每轮结束后更新 context.json：**
+- 更新 `rounds_completed` 计数
+- 根据审查结果更新每个需求的 `status`（`pending` → `covered` / `missing`）
+- 这样新一轮的 code-review 能看到上一轮的进展，避免重复报告
 
 **提交格式**：
 ```bash
@@ -148,9 +219,11 @@ Co-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>"
 
 | 条件 | 说明 |
 |-----|------|
-| 1. 无需修复 | 阶段 2 判定所有问题都是误报或不值得修复 |
+| 1. 无需修复 | 阶段 2 判定所有问题都是误报或不值得修复，**且**需求无 missing |
 | 2. 达到轮数上限 | 已完成 3 轮循环（防止无限循环） |
 | 3. 连续误报 | 连续两轮 review 发现同类问题且都被判定为不采纳 |
+
+**注意**：如果 context.json 中仍有 `status: "missing"` 的需求，不触发条件 1——需求没做完就停是最大的浪费。
 
 ---
 
@@ -235,10 +308,14 @@ Co-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>"
 ## 九、实操 Checklist
 
 ### 结构检查
-☐ 四阶段闭环清晰（审查 → 验证 → 修复 → 测试）
-☐ 终止条件明确（3轮上限 / 无需修复 / 连续误报）
+☐ 五阶段闭环清晰（初始化 → 审查 → 验证 → 修复 → 测试）
+☐ 阶段 0 正确获取 session ID 并告知用户
+☐ 终止条件明确（3轮上限 / 无需修复且需求无 missing / 连续误报）
 
 ### 执行检查
+☐ 需求上下文已持久化至 `.review-loop/{session-id}/context.json`
+☐ 每轮报告和结论已持久化至对应 round 文件
+☐ 每轮结束后更新 context.json 中的需求状态
 ☐ 每轮输出包含：发现数、采纳数、修复内容、测试结果
 ☐ 修复遵循"小而精确"原则
 ☐ 测试通过后才提交 commit
@@ -266,11 +343,28 @@ Co-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>"
 
 ### 10.2 与其他技能的配合
 
-| 技能 | 何时在 Review Loop 中使用 |
-|-----|------------------------|
-| `code-review` | 阶段1，生成审查报告 |
-| `check-comment` | 阶段2，验证报告结论 |
-| `simplify` | 修复后运行，检查代码质量 |
+| 技能 | 何时在 Review Loop 中使用 | 上下文传递 |
+|-----|------------------------|-----------|
+| `code-review` | 阶段1，生成审查报告 | 读取 `context.json` |
+| `check-comment` | 阶段2，验证报告结论 | 读取 `context.json` + 当前轮 `review.md` |
+| `simplify` | 修复后运行，检查代码质量 | — |
+
+### 10.3 文件持久化说明
+
+所有审查产物存储在 `.review-loop/{session-id}/` 下：
+
+```
+.review-loop/{session-id}/
+├── context.json              # 需求上下文 + 状态追踪
+├── round-1-review.md         # 第 1 轮审查报告
+├── round-1-verdict.md        # 第 1 轮验证结论
+├── round-2-review.md         # 第 2 轮...
+├── round-2-verdict.md
+└── summary-{timestamp}.md    # 最终总结（不覆盖）
+```
+
+- 建议将 `.review-loop/` 加入 `.gitignore`
+- 清理与否由用户自行决定
 
 ---
 
