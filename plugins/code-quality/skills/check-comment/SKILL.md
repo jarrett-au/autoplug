@@ -32,10 +32,10 @@ AI review 工具常见的误判模式：
 
 **读取审查上下文：**
 
-`$AUTOPLUG_SESSION_ID` 由 review-loop 的 SessionStart hook 注入。如果为空，说明不在 review-loop 流程中，跳过。
+`CLAUDE_SESSION_ID` 是 Claude Code 内置变量。如果不在 review-loop 流程中（独立使用 check-comment），则跳过。
 
 ```bash
-CONTEXT_FILE=".review-loop/$AUTOPLUG_SESSION_ID/context.json"
+CONTEXT_FILE=".review-loop/${CLAUDE_SESSION_ID}/context.json"
 
 if [ -f "$CONTEXT_FILE" ]; then
   cat "$CONTEXT_FILE"
