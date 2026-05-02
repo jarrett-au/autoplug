@@ -4,6 +4,13 @@ description: |
   自动化代码审查闭环：code review → 验证结论 → 修复真实问题 → 测试 → 重复。
   当用户提到 review loop、审查循环、自动审查修复、循环审查，或说"帮我审查并修复这个分支"时触发。
 allowed-tools: Read, Grep, Glob, Bash, Write, Edit
+hooks:
+  SessionStart:
+    - matcher: "*"
+      hooks:
+        - type: command
+          command: "session_id=$(jq -r .session_id); echo \"export AUTOPLUG_SESSION_ID=$session_id\" >> \"$CLAUDE_ENV_FILE\""
+          timeout: 5
 ---
 
 # 自动化代码审查循环
@@ -58,12 +65,15 @@ allowed-tools: Read, Grep, Glob, Bash, Write, Edit
 
 ### 0.1 获取 Session ID
 
+SessionStart hook 已自动将 session ID 注入环境变量 `$AUTOPLUG_SESSION_ID`，直接使用：
+
 ```bash
-# CLAUDE_SESSION_ID 是 Claude Code 内置变量，resume 时不变
-SESSION_ID="${CLAUDE_SESSION_ID}"
+SESSION_ID="$AUTOPLUG_SESSION_ID"
 REVIEW_DIR=".review-loop/$SESSION_ID"
 mkdir -p "$REVIEW_DIR"
 ```
+
+如果环境变量为空，说明 hook 未触发（plugin 未安装或 frontmatter 不支持 SessionStart），停止并提示用户检查 plugin 配置。
 
 **启动时告知用户：**
 ```
@@ -309,7 +319,7 @@ Co-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>"
 
 ### 结构检查
 ☐ 五阶段闭环清晰（初始化 → 审查 → 验证 → 修复 → 测试）
-☐ 阶段 0 正确获取 session ID 并告知用户
+☐ 阶段 0 检查 `$AUTOPLUG_SESSION_ID` 环境变量，为空则停止
 ☐ 终止条件明确（3轮上限 / 无需修复且需求无 missing / 连续误报）
 
 ### 执行检查

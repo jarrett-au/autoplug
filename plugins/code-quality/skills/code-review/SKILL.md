@@ -29,10 +29,11 @@ You are expected to think critically and loop through **Observation → Hypothes
 
 **在分析任何代码之前**，检查是否存在审查上下文文件：
 
+`$AUTOPLUG_SESSION_ID` 由 review-loop 的 SessionStart hook 注入。如果为空，说明不在 review-loop 流程中，跳过此步骤。
+
 ```bash
-# CLAUDE_SESSION_ID 是 Claude Code 内置变量
-SESSION_ID="${CLAUDE_SESSION_ID}"
-CONTEXT_FILE=".review-loop/$SESSION_ID/context.json"
+# review-loop 的 SessionStart hook 已注入 AUTOPLUG_SESSION_ID
+CONTEXT_FILE=".review-loop/$AUTOPLUG_SESSION_ID/context.json"
 
 if [ -f "$CONTEXT_FILE" ]; then
   cat "$CONTEXT_FILE"

@@ -31,10 +31,11 @@ AI review 工具常见的误判模式：
 - **审查上下文文件**（如果 `.review-loop/*/context.json` 存在，读取需求上下文作为验证参考——特别是当报告涉及需求覆盖判断时）
 
 **读取审查上下文：**
+
+`$AUTOPLUG_SESSION_ID` 由 review-loop 的 SessionStart hook 注入。如果为空，说明不在 review-loop 流程中，跳过。
+
 ```bash
-# CLAUDE_SESSION_ID 是 Claude Code 内置变量
-SESSION_ID="${CLAUDE_SESSION_ID}"
-CONTEXT_FILE=".review-loop/$SESSION_ID/context.json"
+CONTEXT_FILE=".review-loop/$AUTOPLUG_SESSION_ID/context.json"
 
 if [ -f "$CONTEXT_FILE" ]; then
   cat "$CONTEXT_FILE"
