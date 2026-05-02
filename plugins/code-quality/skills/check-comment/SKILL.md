@@ -32,14 +32,11 @@ AI review 工具常见的误判模式：
 
 **读取审查上下文：**
 ```bash
-SESSION_ID=${REVIEW_LOOP_SESSION_ID:-}
-if [ -n "$SESSION_ID" ] && [ -d ".review-loop/$SESSION_ID" ]; then
-  CONTEXT_FILE=".review-loop/$SESSION_ID/context.json"
-elif ls .review-loop/*/context.json 1>/dev/null 2>&1; then
-  CONTEXT_FILE=$(ls -t .review-loop/*/context.json 2>/dev/null | head -1)
-fi
+# CLAUDE_SESSION_ID 是 Claude Code 内置变量
+SESSION_ID="${CLAUDE_SESSION_ID}"
+CONTEXT_FILE=".review-loop/$SESSION_ID/context.json"
 
-if [ -n "${CONTEXT_FILE:-}" ]; then
+if [ -f "$CONTEXT_FILE" ]; then
   cat "$CONTEXT_FILE"
 fi
 ```

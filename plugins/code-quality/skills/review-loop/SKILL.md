@@ -59,9 +59,8 @@ allowed-tools: Read, Grep, Glob, Bash, Write, Edit
 ### 0.1 获取 Session ID
 
 ```bash
-# 优先使用 SessionStart hook 注入的 session ID
-# fallback 使用时间戳 + 随机数
-SESSION_ID=${REVIEW_LOOP_SESSION_ID:-$(date +%Y%m%d-%H%M%S)-$$}
+# CLAUDE_SESSION_ID 是 Claude Code 内置变量，resume 时不变
+SESSION_ID="${CLAUDE_SESSION_ID}"
 REVIEW_DIR=".review-loop/$SESSION_ID"
 mkdir -p "$REVIEW_DIR"
 ```
@@ -69,6 +68,7 @@ mkdir -p "$REVIEW_DIR"
 **启动时告知用户：**
 ```
 🔧 Review Loop 已启动
+📁 Session: $SESSION_ID
 📁 审查目录: .review-loop/$SESSION_ID
 ```
 

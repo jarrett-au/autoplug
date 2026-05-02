@@ -30,15 +30,11 @@ You are expected to think critically and loop through **Observation → Hypothes
 **在分析任何代码之前**，检查是否存在审查上下文文件：
 
 ```bash
-# 查找当前 session 的审查目录
-SESSION_ID=${REVIEW_LOOP_SESSION_ID:-}
-if [ -n "$SESSION_ID" ] && [ -d ".review-loop/$SESSION_ID" ]; then
-  CONTEXT_FILE=".review-loop/$SESSION_ID/context.json"
-elif ls .review-loop/*/context.json 1>/dev/null 2>&1; then
-  CONTEXT_FILE=$(ls -t .review-loop/*/context.json 2>/dev/null | head -1)
-fi
+# CLAUDE_SESSION_ID 是 Claude Code 内置变量
+SESSION_ID="${CLAUDE_SESSION_ID}"
+CONTEXT_FILE=".review-loop/$SESSION_ID/context.json"
 
-if [ -n "${CONTEXT_FILE:-}" ]; then
+if [ -f "$CONTEXT_FILE" ]; then
   cat "$CONTEXT_FILE"
 fi
 ```
