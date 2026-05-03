@@ -27,25 +27,11 @@ You are expected to think critically and loop through **Observation → Hypothes
 
 ### Step 0: Load Requirements Context (⚠️ 如果存在则必须读取)
 
-**在分析任何代码之前**，检查是否存在审查上下文文件：
+需求上下文（context.json）由 review-loop 阶段 0 写入后，已在对话上下文中自动注入（通过 review-loop skill 的动态上下文注入机制）。如果上下文中存在需求信息，直接参考使用。如果不存在，说明不在 review-loop 流程中（独立使用 code-review），跳过此步骤。
 
-```bash
-# 查找当前 session 的审查目录
-SESSION_ID=${REVIEW_LOOP_SESSION_ID:-}
-if [ -n "$SESSION_ID" ] && [ -d ".review-loop/$SESSION_ID" ]; then
-  CONTEXT_FILE=".review-loop/$SESSION_ID/context.json"
-elif ls .review-loop/*/context.json 1>/dev/null 2>&1; then
-  CONTEXT_FILE=$(ls -t .review-loop/*/context.json 2>/dev/null | head -1)
-fi
-
-if [ -n "${CONTEXT_FILE:-}" ]; then
-  cat "$CONTEXT_FILE"
-fi
-```
-
-如果找到 context.json：
-- **用需求理解代码改动的意图**——某些看似不寻常的代码选择可能是为了满足特定需求
-- **注意需求状态**——某些需求可能已被标记为 `covered`，避免重复报告
+**上下文中的需求信息用于：**
+- 理解代码改动的意图——某些看似不寻常的代码选择可能是为了满足特定需求
+- 注意需求状态——某些需求可能已被标记为 `covered`，避免重复报告
 - **需求是参考信号**——不要因需求否定明显更优的实现
 
 ### Step 1: Context Acquisition (Auto-Detect)
