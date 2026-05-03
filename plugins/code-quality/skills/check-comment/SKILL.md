@@ -28,19 +28,9 @@ AI review 工具常见的误判模式：
 - 调用方代码（理解函数在什么上下文中被调用）
 - 测试文件（理解现有测试覆盖了哪些场景）
 - 项目的架构规则和设计文档（如果存在）
-- **审查上下文文件**（如果 `.review-loop/*/context.json` 存在，读取需求上下文作为验证参考——特别是当报告涉及需求覆盖判断时）
+- **审查上下文文件**（如果对话上下文中存在 review-loop 注入的需求信息，直接参考——特别是当报告涉及需求覆盖判断时）
 
-**读取审查上下文：**
-
-`CLAUDE_SESSION_ID` 是 Claude Code 内置变量。如果不在 review-loop 流程中（独立使用 check-comment），则跳过。
-
-```bash
-CONTEXT_FILE=".review-loop/${CLAUDE_SESSION_ID}/context.json"
-
-if [ -f "$CONTEXT_FILE" ]; then
-  cat "$CONTEXT_FILE"
-fi
-```
+> 需求上下文由 review-loop 阶段 0 写入后，已通过动态上下文注入机制自动进入对话。如果上下文中没有需求信息，说明不在 review-loop 流程中（独立使用 check-comment），跳过需求相关验证。
 
 ### 第二步：逐项分析
 

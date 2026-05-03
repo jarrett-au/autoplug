@@ -12,6 +12,11 @@ allowed-tools: Read, Grep, Glob, Bash, Write, Edit
 
 **核心价值**：AI review 工具会产生误报，直接照单全收会引入不必要的改动。通过 review + 二次验证的双重过滤，只修复真正有价值的问题。
 
+**当前 Session**: `${CLAUDE_SESSION_ID}`
+
+**需求上下文**:
+!`cat .review-loop/${CLAUDE_SESSION_ID}/context.json 2>/dev/null || echo '(阶段0尚未完成，需求上下文待提取)'`
+
 ---
 
 ## 一、整体框架：五阶段闭环
@@ -56,21 +61,10 @@ allowed-tools: Read, Grep, Glob, Bash, Write, Edit
 
 在开始审查循环之前，完成所有准备工作。
 
-### 0.1 获取 Session ID
-
-`CLAUDE_SESSION_ID` 是 Claude Code 内置变量，session 期间（含 resume）固定不变，直接使用：
+### 0.1 初始化审查目录
 
 ```bash
-SESSION_ID="${CLAUDE_SESSION_ID}"
-REVIEW_DIR=".review-loop/$SESSION_ID"
-mkdir -p "$REVIEW_DIR"
-```
-
-**启动时告知用户：**
-```
-🔧 Review Loop 已启动
-📁 Session: $SESSION_ID
-📁 审查目录: .review-loop/$SESSION_ID
+mkdir -p ".review-loop/${CLAUDE_SESSION_ID}"
 ```
 
 ### 0.2 提取需求上下文
@@ -102,7 +96,7 @@ mkdir -p "$REVIEW_DIR"
 }
 ```
 
-写入路径：`.review-loop/{session-id}/context.json`
+写入路径：`.review-loop/${CLAUDE_SESSION_ID}/context.json`
 
 **需求是参考信号，不是硬性标准。** 用于理解代码意图、检查覆盖、避免误报。不因需求否定明显更优的实现。
 
@@ -310,7 +304,8 @@ Co-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>"
 
 ### 结构检查
 ☐ 五阶段闭环清晰（初始化 → 审查 → 验证 → 修复 → 测试）
-☐ 阶段 0 使用 `${CLAUDE_SESSION_ID}` 获取 session ID 并告知用户
+☐ 阶段 0 创建审查目录并写入 context.json
+☐ 动态上下文注入正确传递 session ID 和需求信息
 ☐ 终止条件明确（3轮上限 / 无需修复且需求无 missing / 连续误报）
 
 ### 执行检查
@@ -352,7 +347,7 @@ Co-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>"
 
 ### 10.3 文件持久化说明
 
-所有审查产物存储在 `.review-loop/{session-id}/` 下：
+所有审查产物存储在 `.review-loop/${CLAUDE_SESSION_ID}/` 下：
 
 ```
 .review-loop/{session-id}/
