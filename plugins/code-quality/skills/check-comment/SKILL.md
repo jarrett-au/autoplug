@@ -3,6 +3,8 @@ name: check-comment
 description: |
   审查 AI 生成的代码 review 报告——判断问题是否真实存在，给出采纳建议和修复方案。
   当用户提到 review 报告、代码审查报告、AI review、check comment、审查意见时触发。
+context: fork
+agent: comment-checker
 allowed-tools: Read, Grep, Glob, Bash
 ---
 
@@ -19,6 +21,16 @@ AI review 工具常见的误判模式：
 - 引用的代码行号或代码片段与实际代码不一致（报告可能基于旧版本）
 - 把"代码风格偏好"包装成"关键问题"
 
+## Step 0: 加载审查输入（⚠️ 从 review-loop 调用时）
+
+**从 review-loop 调用时**（`$ARGUMENTS` 为 session ID）：
+
+1. 读取 `.review-loop/$ARGUMENTS/` 目录下最新的 `round-*-review.md` 作为待审查报告
+2. 读取 `.review-loop/$ARGUMENTS/context.json` 获取需求上下文（如果存在）
+
+**独立使用时**（无 `$ARGUMENTS`）：
+审查报告应已在对话上下文中，直接进入分析步骤。
+
 ## 工作流程
 
 ### 第一步：收集上下文
@@ -28,9 +40,6 @@ AI review 工具常见的误判模式：
 - 调用方代码（理解函数在什么上下文中被调用）
 - 测试文件（理解现有测试覆盖了哪些场景）
 - 项目的架构规则和设计文档（如果存在）
-- **审查上下文文件**（如果对话上下文中存在 review-loop 注入的需求信息，直接参考——特别是当报告涉及需求覆盖判断时）
-
-> 需求上下文由 review-loop 阶段 0 写入后，已通过动态上下文注入机制自动进入对话。如果上下文中没有需求信息，说明不在 review-loop 流程中（独立使用 check-comment），跳过需求相关验证。
 
 ### 第二步：逐项分析
 
@@ -72,3 +81,15 @@ AI review 工具常见的误判模式：
 - 对薄封装层做 mock 测试（ROI 太低）
 - 代码风格偏好而非实际缺陷
 - 报告基于对代码逻辑的错误理解
+
+## 输出行为
+
+**从 review-loop 调用时**（`$ARGUMENTS` 已提供 session ID）：
+1. 将完整验证结论保存至 `.review-loop/$ARGUMENTS/round-{N}-verdict.md`（N 与对应的 review 轮次一致）
+2. **仅向主对话返回简要摘要**，格式：
+   ```
+   验证完成：采纳 {A} 个 | 部分采纳 {P} 个 | 不采纳 {R} 个 | 结论已保存 round-{N}-verdict.md
+   ```
+
+**独立使用时**（无 `$ARGUMENTS`）：
+直接在对话中输出完整验证结论（不保存文件）。

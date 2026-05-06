@@ -12,10 +12,9 @@ allowed-tools: Read, Grep, Glob, Bash, Write, Edit
 
 **核心价值**：AI review 工具会产生误报，直接照单全收会引入不必要的改动。通过 review + 二次验证的双重过滤，只修复真正有价值的问题。
 
-**当前 Session**: `${CLAUDE_SESSION_ID}`
+**架构**：code-review 和 check-comment 在独立 subagent（`context: fork`）中运行，主对话仅保留编排状态和简要摘要，避免中间产出的 token 累积。
 
-**需求上下文**:
-!`cat .review-loop/${CLAUDE_SESSION_ID}/context.json 2>/dev/null || echo '(阶段0尚未完成，需求上下文待提取)'`
+**当前 Session**: `${CLAUDE_SESSION_ID}`
 
 ---
 
@@ -106,29 +105,33 @@ mkdir -p ".review-loop/${CLAUDE_SESSION_ID}"
 
 ### 2.1 执行步骤
 
-激活 `code-review` 技能，对当前分支相较于 main 分支的变更进行深度审查。
+调用 `/code-review ${CLAUDE_SESSION_ID}`，对当前分支相较于 main 分支的变更进行深度审查。
+
+审查在独立 subagent 中运行，完整报告保存至 `.review-loop/${CLAUDE_SESSION_ID}/round-{N}-review.md`，主对话仅收到简要摘要。
 
 ```bash
-# 获取当前分支的完整变更
+# Subagent 会自动执行以下命令，此处仅供参考
 git diff main...HEAD --stat
 git diff main...HEAD --name-only
 ```
 
-### 2.2 输出要求
+### 2.2 输出说明
 
-产出一份完整的中文审查报告，包含：
-- 变更概述（文件列表、行数统计）
-- **需求覆盖检查**（逐条核对 context.json 中的需求要点，标记 covered/missing）
-- 需关注问题（按严重程度排序）
-- 次要建议（可选优化项）
+subagent 返回的摘要包含：状态、风险等级、发现的问题数量。完整报告已保存至文件。
 
-将报告内容保存在 `.review-loop/{session-id}/round-{N}-review.md`，作为下一阶段的输入。
+如需查看完整报告，读取 `.review-loop/${CLAUDE_SESSION_ID}/` 下最新的 `round-*-review.md`。
 
 ---
 
 ## 三、第二阶段：验证 Review 结论（过滤层）
 
-### 3.1 核心目的
+### 3.1 执行步骤
+
+调用 `/check-comment ${CLAUDE_SESSION_ID}`，验证阶段 1 的审查报告。
+
+check-comment 在独立 subagent 中运行，自动找到最新的 review 文件进行验证，结论保存至 `.review-loop/${CLAUDE_SESSION_ID}/round-{N}-verdict.md`，主对话仅收到简要摘要。
+
+### 3.2 核心目的
 
 过滤掉 review 中的误报和过度建议。对每个问题独立判断：
 
@@ -139,7 +142,7 @@ git diff main...HEAD --name-only
 | 修复合理性 | 修复建议是否可行，是否有更好的方案 |
 | 需求准确性 | 如果报告涉及需求覆盖判断，读取 context.json 验证结论是否准确 |
 
-### 3.2 输出格式
+### 3.3 输出格式
 
 对每个问题标注处理意见：
 
@@ -149,15 +152,19 @@ git diff main...HEAD --name-only
 | 部分采纳 | 问题真实但建议需调整 | 添加日志而非报错 |
 | 不采纳 | 误报或优先级过低 | 合理的防御性编程 |
 
-将结论保存至 `.review-loop/{session-id}/round-{N}-verdict.md`。
+将结论保存至 `.review-loop/{session-id}/round-{N}-verdict.md`（由 subagent 自动完成）。
+
+主对话仅收到简要摘要（采纳/不采纳数量）。如需查看完整结论，读取该文件。
 
 ---
 
 ## 四、第三阶段：执行修复（执行层）
 
-### 4.1 修复原则
+### 4.1 获取修复清单
 
-只修复阶段 2 中标记为"采纳"或"部分采纳"的问题。
+读取 `.review-loop/${CLAUDE_SESSION_ID}/` 下最新的 `round-*-verdict.md`，获取标记为"采纳"或"部分采纳"的问题列表。
+
+### 4.2 修复原则
 
 ✅ **好的修复**：
 - 小而精确，不做超出问题范围的改动
@@ -305,12 +312,13 @@ Co-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>"
 ### 结构检查
 ☐ 五阶段闭环清晰（初始化 → 审查 → 验证 → 修复 → 测试）
 ☐ 阶段 0 创建审查目录并写入 context.json
-☐ 动态上下文注入正确传递 session ID 和需求信息
+☐ 阶段 1/2 通过 `/code-review` 和 `/check-comment` 在 subagent 中执行（`context: fork`），仅摘要返回主对话
 ☐ 终止条件明确（3轮上限 / 无需修复且需求无 missing / 连续误报）
 
 ### 执行检查
-☐ 需求上下文已持久化至 `.review-loop/{session-id}/context.json`
-☐ 每轮报告和结论已持久化至对应 round 文件
+☐ 需求上下文已持久化至 `.review-loop/${CLAUDE_SESSION_ID}/context.json`
+☐ code-review / check-comment 在 subagent 中执行，报告和结论已持久化至对应 round 文件
+☐ review-loop 通过读取 verdict 文件获取修复清单
 ☐ 每轮结束后更新 context.json 中的需求状态
 ☐ 每轮输出包含：发现数、采纳数、修复内容、测试结果
 ☐ 修复遵循"小而精确"原则
@@ -341,8 +349,8 @@ Co-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>"
 
 | 技能 | 何时在 Review Loop 中使用 | 上下文传递 |
 |-----|------------------------|-----------|
-| `code-review` | 阶段1，生成审查报告 | 读取 `context.json` |
-| `check-comment` | 阶段2，验证报告结论 | 读取 `context.json` + 当前轮 `review.md` |
+| `code-review` | 阶段1，生成审查报告（`context: fork`） | 从 `$ARGUMENTS` 获取 session ID，自行读取 `context.json` |
+| `check-comment` | 阶段2，验证报告结论（`context: fork`） | 从 `$ARGUMENTS` 获取 session ID，自行读取 review 报告 + `context.json` |
 | `simplify` | 修复后运行，检查代码质量 | — |
 
 ### 10.3 文件持久化说明

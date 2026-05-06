@@ -3,6 +3,8 @@ name: code-review
 description: |
   自主深度代码审查——主动探索代码上下文，输出中文结构化审查报告（安全/性能/正确性）。
   适用于审查 GitHub PR 或本地 git 变更。会自主调用 git、gh、文件读取工具构建完整心智模型。
+context: fork
+agent: code-reviewer
 allowed-tools: Read, Grep, Glob, Bash
 ---
 
@@ -21,20 +23,20 @@ To achieve this, you must **autonomously orchestrate** your available tools (`gi
 - Do NOT guess about function behaviors if they are not visible in the diff
 - Do NOT ignore the ripple effects of a change on other files
 
-## 🛠️ Autonomous Investigation Strategy
+## Step 0: 加载需求上下文（⚠️ 从 review-loop 调用时必须读取）
 
-You are expected to think critically and loop through **Observation → Hypothesis → Verification** until you are satisfied.
+**从 review-loop 调用时**（`$ARGUMENTS` 为 session ID）：
 
-### Step 0: Load Requirements Context (⚠️ 如果存在则必须读取)
+读取 `.review-loop/$ARGUMENTS/context.json` 获取需求上下文。
 
-需求上下文（context.json）由 review-loop 阶段 0 写入后，已在对话上下文中自动注入（通过 review-loop skill 的动态上下文注入机制）。如果上下文中存在需求信息，直接参考使用。如果不存在，说明不在 review-loop 流程中（独立使用 code-review），跳过此步骤。
-
-**上下文中的需求信息用于：**
+**需求信息用于：**
 - 理解代码改动的意图——某些看似不寻常的代码选择可能是为了满足特定需求
 - 注意需求状态——某些需求可能已被标记为 `covered`，避免重复报告
 - **需求是参考信号**——不要因需求否定明显更优的实现
 
-### Step 1: Context Acquisition (Auto-Detect)
+**独立使用时**（无 `$ARGUMENTS`）：跳过此步骤。
+
+## Step 1: Context Acquisition (Auto-Detect)
 
 **Analyze the user's intent**: Are they asking for a PR review (Remote) or a local check (Local)?
 
@@ -44,7 +46,7 @@ You are expected to think critically and loop through **Observation → Hypothes
 
 Decide and execute the appropriate entry command to get the raw material.
 
-### Step 2: Deep Context Verification (The "Investigator" Loop)
+## Step 2: Deep Context Verification (The "Investigator" Loop)
 
 A raw diff is rarely enough. You must aggressively use `Read` (read_file) tool to validate your assumptions. Apply these **Heuristics**:
 
@@ -143,6 +145,19 @@ Fold minor style suggestions into `<details>`:
 - Style suggestion 2
 </details>
 ```
+
+## 输出行为
+
+**从 review-loop 调用时**（`$ARGUMENTS` 已提供 session ID）：
+1. 将完整审查报告保存至 `.review-loop/$ARGUMENTS/round-{N}-review.md`（N 自动递增——查看已有文件确定下一轮次）
+2. **仅向主对话返回简要摘要**，格式：
+   ```
+   审查完成：{状态} | 风险：{等级} | 发现 {X} 个问题（{Y} 主要 + {Z} 次要）| 报告已保存 round-{N}-review.md
+   ```
+   如果存在 context.json，追加需求覆盖：`| 需求覆盖 {M}/{K}`
+
+**独立使用时**（无 `$ARGUMENTS`）：
+直接在对话中输出完整审查报告（不保存文件）。
 
 ## Investigation Workflow Summary
 
