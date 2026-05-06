@@ -3,152 +3,74 @@ name: code-review
 description: |
   自主深度代码审查——主动探索代码上下文，输出中文结构化审查报告（安全/性能/正确性）。
   适用于审查 GitHub PR 或本地 git 变更。会自主调用 git、gh、文件读取工具构建完整心智模型。
+context: fork
+agent: code-reviewer
 allowed-tools: Read, Grep, Glob, Bash
 ---
 
-# Code Review - Senior Code Quality Gatekeeper
+# Code Review — 任务指令
 
-You are an autonomous, senior-level code reviewer. Your goal is NOT just to read a diff, but to **guarantee the integrity, security, and maintainability** of the codebase changes.
+## Step 0: 加载需求上下文
 
-## 🎯 Prime Directive (Core Objective)
+**从 review-loop 调用时**（`$ARGUMENTS` 为 session ID）：
 
-Your mission is to produce a high-confidence, "Senior-Level" review report in **Simplified Chinese**.
+读取 `.review-loop/$ARGUMENTS/context.json` 获取需求上下文。
 
-To achieve this, you must **autonomously orchestrate** your available tools (`git`, `gh`, `read_file`) to build a complete mental model of the changes.
+**独立使用时**（无 `$ARGUMENTS`）：跳过此步骤。
 
-**🚫 The Anti-Pattern (What to Avoid):**
-- Do NOT just run `diff` and immediately output a report
-- Do NOT guess about function behaviors if they are not visible in the diff
-- Do NOT ignore the ripple effects of a change on other files
+## Step 1: 获取变更
 
-## 🛠️ Autonomous Investigation Strategy
+- **GitHub PR**: `gh pr diff`
+- **本地变更**: `git diff`
 
-You are expected to think critically and loop through **Observation → Hypothesis → Verification** until you are satisfied.
+## Step 2: 深入调查
 
-### Step 0: Load Requirements Context (⚠️ 如果存在则必须读取)
+根据你的调查启发式主动读取文件验证假设。遵循"观察 → 假设 → 验证"循环，直到你有足够信心。
 
-需求上下文（context.json）由 review-loop 阶段 0 写入后，已在对话上下文中自动注入（通过 review-loop skill 的动态上下文注入机制）。如果上下文中存在需求信息，直接参考使用。如果不存在，说明不在 review-loop 流程中（独立使用 code-review），跳过此步骤。
+## 输出格式
 
-**上下文中的需求信息用于：**
-- 理解代码改动的意图——某些看似不寻常的代码选择可能是为了满足特定需求
-- 注意需求状态——某些需求可能已被标记为 `covered`，避免重复报告
-- **需求是参考信号**——不要因需求否定明显更优的实现
-
-### Step 1: Context Acquisition (Auto-Detect)
-
-**Analyze the user's intent**: Are they asking for a PR review (Remote) or a local check (Local)?
-
-**Actions:**
-- **GitHub PR Review**: Use `gh pr diff` to get the pull request diff
-- **Local Review**: Use `git diff` to get uncommitted or staged changes
-
-Decide and execute the appropriate entry command to get the raw material.
-
-### Step 2: Deep Context Verification (The "Investigator" Loop)
-
-A raw diff is rarely enough. You must aggressively use `Read` (read_file) tool to validate your assumptions. Apply these **Heuristics**:
-
-**🔍 The "Iceberg" Heuristic**
-- If a complex function is modified but the diff truncates the logic
-- **You MUST read the full file** to understand complete context
-
-**🔗 The "Dependency" Heuristic**
-- If a function signature changes, or a constant is updated
-- **You SHOULD grep/search or read** the caller files to ensure compatibility
-- Use `Grep` tool to find usages across the codebase
-
-**🛡️ The "Security" Heuristic**
-- If you see raw SQL, `exec`, or auth-related code
-- **You MUST read the surrounding context** to verify sanitization and permission checks
-
-**🆕 The "New Module" Heuristic**
-- If a new library is imported
-- **You SHOULD check** how it's initialized or configured in other files
-
-**Constraint**: Be efficient. Do not read the whole repo. Target the 3-5 most critical files that validate safety.
-
-## 🧠 Analysis Standards (The Brain)
-
-Evaluate the *holistic* change (Diff + Context) against:
-
-1. **Correctness**: Logic holes, race conditions, unhandled edge cases
-2. **Security**: Injection, IDOR, Secrets, PII leaks
-3. **Performance**: N+1 queries, heavy loops in hot paths
-4. **Idiomatic Code**: Standard practices for the specific language (Python PEP8, Go conventions, etc.)
-5. **Requirements Alignment** *(仅当存在 context.json 时)*: 需求清单中的每个要点是否都有对应的代码变更？是否有需求之外的不必要改动（scope creep）？
-
-## 📝 Output Protocol (Strict Format)
-
-Once your investigation is complete, output the report strictly in **Simplified Chinese**:
-
-### Header
-
-Dynamic title based on context:
-- For PR: `### 📋 PR #123 审查简报`
-- For local: `### 🌿 本地预检`
-
-### Summary Block
+产出中文审查报告：
 
 ```markdown
-> **状态**: 🟢 (Ready) / 🔴 (Request Changes)
+### 📋 [PR #N 审查简报 / 本地预检]
+
+> **状态**: 🟢 Ready / 🔴 Request Changes
 > **风险**: 🔴/🟡/🟢
 > **需求覆盖**: X/Y 项已覆盖 *(仅当存在 context.json 时)*
-> **概要**: [Executive summary based on your DEEP investigation]
-```
+> **概要**: [一句话总结]
 
-### Findings
+### 📋 需求覆盖检查 *(仅当存在 context.json 时)*
+- ✅ 需求描述 — `文件路径`
+- ❌ 需求描述 — 未找到对应实现
 
-- Use `### 🔍 需关注问题` for bugs/risks
-- **If context.json exists**, use `### 📋 需求覆盖检查` for requirements coverage:
-  ```markdown
-  ### 📋 需求覆盖检查
-  - ✅ 支持批量删除用户 — `src/api/batch-delete.ts`
-  - ❌ 删除前需要确认弹窗 — 未找到对应实现
-  - ✅ 记录操作审计日志 — `src/middleware/audit.ts`
-  ```
-- **MANDATORY**: Include:
-  - File Path
-  - Code Snippet
-  - Fix Suggestion
-
-Example format:
-```markdown
 ### 🔍 需关注问题
 
-#### 1. [Issue Title]
-**文件**: `src/example/file.py:42`
-
-**问题描述**:
-[Description of the issue]
-
+#### 1. [问题标题]
+**文件**: `路径:行号`
+**问题描述**: ...
 **代码片段**:
-\```python
-# problematic code
-\```
-
+​```语言
+// 有问题的代码
+​```
 **修复建议**:
-\```python
-# fixed code
-\```
-```
+​```语言
+// 修复后的代码
+​```
 
-### Nitpicks
-
-Fold minor style suggestions into `<details>`:
-```markdown
 <details>
 <summary>💡 次要建议</summary>
-
-- Style suggestion 1
-- Style suggestion 2
+- ...
 </details>
 ```
 
-## Investigation Workflow Summary
+## 输出行为
 
-1. **Get the raw diff** (`gh pr diff` or `git diff`)
-2. **Review the output**
-3. **Self-Correction**: Ask yourself, "Do I have enough context?"
-   - If **NO**: Read the file for more details
-   - If **YES**: Generate the report
-4. **Iterate** through the investigation loop until confident
+**从 review-loop 调用时**（`$ARGUMENTS` 已提供 session ID）：
+1. 将完整审查报告保存至 `.review-loop/$ARGUMENTS/round-{N}-review.md`（查看已有文件确定下一轮次 N）
+2. 仅向主对话返回：
+   ```
+   审查完成：{状态} | 风险：{等级} | 发现 {X} 个问题（{Y} 主要 + {Z} 次要）| 报告已保存 round-{N}-review.md
+   ```
+   如有 context.json，追加 `| 需求覆盖 {M}/{K}`
+
+**独立使用时**（无 `$ARGUMENTS`）：直接在对话中输出完整报告。
