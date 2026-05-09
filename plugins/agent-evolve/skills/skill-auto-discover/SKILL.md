@@ -79,8 +79,8 @@ allowed-tools: Read, Edit, Write, Bash
 在修改任何现存文件之前，**必须**压缩备份：
 
 ```bash
-mkdir -p <path>/backups
-zip -r "<path>/backups/<name>-$(date +%Y%m%d)-1.zip" SKILL.md reference/ 2>/dev/null || true
+mkdir -p .claude/plugins-data/agent-evolve/backups
+zip -r ".claude/plugins-data/agent-evolve/backups/<name>-$(date +%Y%m%d)-1.zip" SKILL.md reference/ 2>/dev/null || true
 ```
 
 如果涉及多版本演进，可选创建 `CHANGES.md` 记录变更历史。

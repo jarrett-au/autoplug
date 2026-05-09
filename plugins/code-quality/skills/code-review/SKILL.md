@@ -14,7 +14,7 @@ allowed-tools: Read, Grep, Glob, Bash
 
 **从 review-loop 调用时**（`$ARGUMENTS` 为 session ID）：
 
-读取 `.review-loop/$ARGUMENTS/context.json` 获取需求上下文。
+读取 `.claude/plugins-data/code-quality/review-loop/$ARGUMENTS/context.json` 获取需求上下文。
 
 **独立使用时**（无 `$ARGUMENTS`）：跳过此步骤。
 
@@ -66,7 +66,7 @@ allowed-tools: Read, Grep, Glob, Bash
 ## 输出行为
 
 **从 review-loop 调用时**（`$ARGUMENTS` 已提供 session ID）：
-1. 将完整审查报告保存至 `.review-loop/$ARGUMENTS/round-{N}-review.md`（查看已有文件确定下一轮次 N）
+1. 将完整审查报告保存至 `.claude/plugins-data/code-quality/review-loop/$ARGUMENTS/round-{N}-review.md`（查看已有文件确定下一轮次 N）
 2. 仅向主对话返回：
    ```
    审查完成：{状态} | 风险：{等级} | 发现 {X} 个问题（{Y} 主要 + {Z} 次要）| 报告已保存 round-{N}-review.md

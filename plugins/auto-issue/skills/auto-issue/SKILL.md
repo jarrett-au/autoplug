@@ -57,7 +57,7 @@ $ARGUMENTS
 
 ### 1.5.1 写入测试配置
 
-**先检查 Makefile，再从影响域报告补充。** 用 **Write 工具**写入 `.claude/.test-env`：
+**先检查 Makefile，再从影响域报告补充。** 用 **Write 工具**写入 `.claude/plugins-data/auto-issue/.test-env`：
 
 **Step 1 — 分析 Makefile（如有）：**
 
@@ -96,15 +96,15 @@ E2E_TEST_CMD="<Makefile 或 报告中的 E2E 测试命令，无则留空>"
 ### 1.5.2 部署测试门脚本
 
 ```bash
-mkdir -p .claude/scripts
+mkdir -p .claude/plugins-data/auto-issue/scripts
 PLUGIN_DIR="$HOME/.claude/plugins/marketplaces/autoplug/plugins/auto-issue"
 if [[ -f "$PLUGIN_DIR/skills/auto-issue/scripts/test-gate.sh" ]]; then
-  cp "$PLUGIN_DIR/skills/auto-issue/scripts/test-gate.sh" .claude/scripts/test-gate.sh
-  chmod +x .claude/scripts/test-gate.sh
+  cp "$PLUGIN_DIR/skills/auto-issue/scripts/test-gate.sh" .claude/plugins-data/auto-issue/scripts/test-gate.sh
+  chmod +x .claude/plugins-data/auto-issue/scripts/test-gate.sh
 else
   # fallback: 兼容 skill 安装路径
-  find "$HOME/.claude" -path "*/auto-issue/scripts/test-gate.sh" -exec cp {} .claude/scripts/test-gate.sh \; 2>/dev/null \
-    && chmod +x .claude/scripts/test-gate.sh \
+  find "$HOME/.claude" -path "*/auto-issue/scripts/test-gate.sh" -exec cp {} .claude/plugins-data/auto-issue/scripts/test-gate.sh \; 2>/dev/null \
+    && chmod +x .claude/plugins-data/auto-issue/scripts/test-gate.sh \
     || echo "⚠️ 未找到 test-gate.sh，请确认 auto-issue plugin 已安装"
 fi
 ```
@@ -144,7 +144,7 @@ fi
 ### 3.1 测试门
 
 ```bash
-bash .claude/scripts/test-gate.sh
+bash .claude/plugins-data/auto-issue/scripts/test-gate.sh
 ```
 
 通过 → 继续 3.2。失败 → 回 Phase 2。
