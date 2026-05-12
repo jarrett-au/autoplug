@@ -32,7 +32,7 @@ hooks:
     - matcher: "*"
       hooks:
         - type: command
-          command: bash "$CLAUDE_PROJECT_DIR"/.claude/plugins-data/auto-issue/scripts/test-gate.sh
+          command: bash "$CLAUDE_PROJECT_DIR"/.claude-plugins-data/auto-issue/scripts/test-gate.sh
           timeout: 300
 ---
 
@@ -103,9 +103,9 @@ hooks:
 
 ## 自动质量保障
 
-你的 SubagentStop hook 会自动执行 `.claude/plugins-data/auto-issue/scripts/test-gate.sh`：
+你的 SubagentStop hook 会自动执行 `.claude-plugins-data/auto-issue/scripts/test-gate.sh`：
 - 自动检测项目类型并运行对应测试
-- 如果 `.claude/plugins-data/auto-issue/.test-env` 存在则使用其中的配置
+- 如果 `.claude-plugins-data/auto-issue/.test-env` 存在则使用其中的配置
 - 任何测试失败都会阻断退出
 
 如果被 hook 阻断，根据错误输出修复问题后重新尝试退出。

@@ -13,8 +13,8 @@ allowed-tools: Read, Grep, Glob, Bash
 ## Step 0: 加载审查输入
 
 **从 review-loop 调用时**（`$ARGUMENTS` 为 session ID）：
-1. 读取 `.claude/plugins-data/code-quality/review-loop/$ARGUMENTS/` 目录下最新的 `round-*-review.md`
-2. 读取 `.claude/plugins-data/code-quality/review-loop/$ARGUMENTS/context.json`（如果存在）
+1. 读取 `.claude-plugins-data/code-quality/review-loop/$ARGUMENTS/` 目录下最新的 `round-*-review.md`
+2. 读取 `.claude-plugins-data/code-quality/review-loop/$ARGUMENTS/context.json`（如果存在）
 
 **独立使用时**（无 `$ARGUMENTS`）：审查报告应在对话上下文中。
 
@@ -45,7 +45,7 @@ allowed-tools: Read, Grep, Glob, Bash
 ## 输出行为
 
 **从 review-loop 调用时**（`$ARGUMENTS` 已提供 session ID）：
-1. 将完整结论保存至 `.claude/plugins-data/code-quality/review-loop/$ARGUMENTS/round-{N}-verdict.md`（N 与 review 轮次一致）
+1. 将完整结论保存至 `.claude-plugins-data/code-quality/review-loop/$ARGUMENTS/round-{N}-verdict.md`（N 与 review 轮次一致）
 2. 仅向主对话返回：
    ```
    验证完成：采纳 {A} 个 | 部分采纳 {P} 个 | 不采纳 {R} 个 | 结论已保存 round-{N}-verdict.md

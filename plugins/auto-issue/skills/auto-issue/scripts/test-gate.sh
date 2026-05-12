@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 # test-gate.sh — Auto-Issue 测试门脚本
 # 由 autoissue-developer 的 SubagentStop hook 自动调用
-# 读取 .claude/plugins-data/auto-issue/.test-env 获取项目配置，或自动检测
+# 读取 .claude-plugins-data/auto-issue/.test-env 获取项目配置，或自动检测
 
 set -euo pipefail
 
 cd "${CLAUDE_PROJECT_DIR:-.}"
 
 # ── 加载配置 ──
-TEST_ENV=".claude/plugins-data/auto-issue/.test-env"
+TEST_ENV=".claude-plugins-data/auto-issue/.test-env"
 if [[ -f "$TEST_ENV" ]]; then
   # shellcheck source=/dev/null
   source "$TEST_ENV"
@@ -47,7 +47,7 @@ if [[ -n "${UNIT_TEST_CMD:-}" ]]; then
   run_test "E2E 测试" "${E2E_TEST_CMD:-}"
 else
   # ── 自动检测项目类型 ──
-  echo -e "${YELLOW}⚠ 未找到 plugins-data/auto-issue/.test-env，自动检测项目类型${NC}\n"
+  echo -e "${YELLOW}⚠ 未找到 .claude-plugins-data/auto-issue/.test-env，自动检测项目类型${NC}\n"
 
   if [[ -f "pyproject.toml" ]] || [[ -f "setup.py" ]]; then
     # Python 项目
@@ -76,7 +76,7 @@ else
     run_test "单元测试" "go test ./..."
 
   else
-    echo -e "${RED}✗ 无法识别项目类型，请创建 .claude/plugins-data/auto-issue/.test-env 配置测试命令${NC}"
+    echo -e "${RED}✗ 无法识别项目类型，请创建 .claude-plugins-data/auto-issue/.test-env 配置测试命令${NC}"
     fail=1
   fi
 fi
