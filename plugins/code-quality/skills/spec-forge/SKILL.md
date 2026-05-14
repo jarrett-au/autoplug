@@ -67,7 +67,7 @@ Write the spec to a file and present a summary to the user. Use markdown format 
 - Alternatives considered and why they were rejected
 - Implementation phases or milestones
 
-**File location:** Ask user where to save the spec, or suggest a sensible default (e.g., `docs/specs/[feature-name].md` or `SPEC.md`)
+**File location:** 默认保存到 `.claude-plugins-data/code-quality/spec-forge/<timestamp: yyyymmdd>-{feature-name}.md`。如用户指定其他路径则遵从。首次写入前 `mkdir -p` 创建目录。
 
 **Delivery:** After writing the file, present a brief summary in chat highlighting:
 - Problem being solved
