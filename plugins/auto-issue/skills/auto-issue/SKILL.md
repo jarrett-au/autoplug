@@ -182,7 +182,7 @@ mkdir -p "$REVIEW_DIR"
 
 从 scope 报告中提取「需求清单」段，写入 `$REVIEW_DIR/requirements.md`。
 
-设置审查参数：`REVIEW_ROUND=0`，`MAX_ROUNDS=2`。
+设置审查参数：`REVIEW_ROUND=0`，`MAX_ROUNDS=3`。
 
 ### 3.5.1 审查循环
 
