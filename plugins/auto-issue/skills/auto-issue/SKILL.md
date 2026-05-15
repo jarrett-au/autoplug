@@ -170,7 +170,27 @@ grep -cE 'def test_|it\(|describe\(|test\(|TEST\(' <路径>
 
 ---
 
-## Phase 3.5: 代码审查
+## Phase 3.5: 审查闭环
+
+### 3.5.0 初始化
+
+```bash
+SESSION_ID="${CLAUDE_SESSION_ID}"
+REVIEW_DIR=".claude-plugins-data/auto-issue/auto-issue/$SESSION_ID"
+mkdir -p "$REVIEW_DIR"
+```
+
+从 scope 报告中提取「需求清单」段，写入 `$REVIEW_DIR/requirements.md`。
+
+设置审查参数：`REVIEW_ROUND=0`，`MAX_ROUNDS=2`。
+
+### 3.5.1 审查循环
+
+```
+REVIEW_ROUND = REVIEW_ROUND + 1
+```
+
+#### Step A: Review
 
 调用 @autoissue-reviewer，传入：
 
@@ -179,24 +199,101 @@ grep -cE 'def test_|it\(|describe\(|test\(|TEST\(' <路径>
 
 $ARGUMENTS
 
-## 审查以下变更
+## 需求清单（逐条核对）
+
+<从 requirements.md 复制的需求清单>
+
+## 输出要求
+
+- 将完整审查报告保存至：<REVIEW_DIR>/round-<REVIEW_ROUND>-review.md
+- 向我返回简短摘要（≤5行），格式：审查完成：{结论} | 发现 {X} 个问题 | 需求覆盖 {M}/{K}
 
 请用 git diff 查看所有变更并审查。
 ```
 
-**⚠️ 关键：只传原始需求和变更指令，不要传入影响域报告、开发过程等任何中间信息。** reviewer 必须基于代码本身独立判断。
+**⚠️ 关键：只传原始需求、需求清单和变更指令，不要传入影响域报告、开发过程等任何中间信息。**
 
-**autoissue-reviewer 以 auto 模式运行，完成后自然返回。**
+**autoissue-reviewer 以 auto 模式运行，完成后自然返回摘要。**
 
-**处理审查结论：**
+解析 reviewer 返回的结论标签：
 
-拿到结论后，打印审查报告并提供对话式选项：
+- **LGTM** 或 **RISKS_NOTED** → 写 `$REVIEW_DIR/summary.md`，输出审查摘要 + 选项（见 3.5.2），**退出循环**
+- **NEEDS_CHANGES** → 继续 Step B
+
+#### Step B: Verify（仅 NEEDS_CHANGES 时触发）
+
+调用 @autoissue-checker，传入：
+
+```
+## 验证任务
+
+- 审查报告：<REVIEW_DIR>/round-<REVIEW_ROUND>-review.md
+- 需求清单：<REVIEW_DIR>/requirements.md
+- 结论保存至：<REVIEW_DIR>/round-<REVIEW_ROUND>-verdict.md
+
+请读取这两个文件，对审查报告中的每个问题独立验证。
+将完整结论写入 verdict 文件，向我返回简短摘要。
+```
+
+解析 checker 返回的摘要：
+
+- **全部不采纳** → 输出「所有问题经验证为误报/过度建议，审查通过」+ 写 `$REVIEW_DIR/summary.md`，**退出循环**
+- **有采纳项** → 继续 Step C 判断
+
+#### Step C: 循环终止判断
+
+- `REVIEW_ROUND >= MAX_ROUNDS` → 输出「⚠️ 已达最大审查轮次」+ checker 采纳的问题清单 + 选项（见 3.5.2），写 `$REVIEW_DIR/summary.md`，**退出循环**
+- 否则 → 继续 Step D
+
+#### Step D: Fix
+
+从 `$REVIEW_DIR/round-<REVIEW_ROUND>-verdict.md` 提取标记为「采纳」和「部分采纳」的问题列表。
+
+分类为两类传给 @autoissue-developer：
+
+```
+## 代码审查反馈（第 <REVIEW_ROUND> 轮）
+
+### 需求未覆盖
+- [需求 #N]: <具体描述> — <checker 的判断>
+
+### 代码质量问题
+- [采纳] <文件>:<行> — <问题描述> → <checker 建议的修复方向>
+- [部分采纳] <文件>:<行> — <问题描述> → <checker 建议的修复方向>
+```
+
+**⚠️ 只传 checker 采纳的问题，不传 checker 不采纳的问题。checker 是决策依据。**
+
+等待 @autoissue-developer 完成修复。
+
+**回到 Phase 3**（测试门 + 覆盖检查），通过后**回到 3.5.1 继续下一轮审查循环**。
+
+### 3.5.2 完成后选项
+
+审查循环退出后，提供对话式选项：
 
 - **LGTM** → 输出「✅ 代码审查通过 (LGTM)」+ 审查摘要 + 选项：1) 提交 PR  2) 结束流程
 - **RISKS_NOTED** → 输出「💡 代码审查通过，但存在风险」+ 风险列表 + 选项：1) 提交 PR  2) 接受风险并结束  3) 回到 Phase 2 修复风险点
-- **NEEDS_CHANGES** → 输出「⚠️ 代码审查发现问题」+ 问题列表 + 选项：1) 自动修复（将问题列表传给 @autoissue-developer）  2) 接受当前代码  3) 结束流程
+- **全部不采纳** → 输出「✅ 审查通过（所有问题经验证为误报）」+ 选项：1) 提交 PR  2) 结束流程
+- **达到轮次上限仍有问题** → 输出「⚠️ 已达最大审查轮次」+ 剩余问题清单 + 选项：1) 提交 PR  2) 接受当前代码  3) 结束流程
 
 等待用户正常回复后执行对应操作。
+
+### 审查产物
+
+所有中间文件持久化在 `.claude-plugins-data/auto-issue/auto-issue/{session-id}/` 下：
+
+```
+auto-issue/{session-id}/
+├── requirements.md        ← 需求清单（scope 提取）
+├── round-1-review.md      ← 第 1 轮 reviewer 完整报告
+├── round-1-verdict.md     ← 第 1 轮 checker 验证结论
+├── round-2-review.md
+├── round-2-verdict.md
+└── summary.md             ← 最终审查总结
+```
+
+用户可随时查看中间文件判断审查是否跑偏，或 `git checkout` 回滚到任意轮次之前的状态。
 
 ---
 
@@ -286,6 +383,6 @@ Closes #<issue_number>
 
 1. **你不写代码**——开发全委托给 @autoissue-developer
 2. **你不跑测试**——测试由 developer hook 和 Phase 3 执行
-3. **你不审查代码**——审查由 @autoissue-reviewer 完成
+3. **你不审查代码**——审查由 @autoissue-reviewer + @autoissue-checker 完成
 4. **你只做编排**——调度、验证、汇总、PR
 5. **任何 agent 异常**——分析原因，调整后重新调用，不要停止
