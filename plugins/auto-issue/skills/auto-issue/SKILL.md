@@ -40,16 +40,19 @@ $ARGUMENTS
 
 $ARGUMENTS
 
-输出完整的影响域报告。
+输出完整的影响域报告并保存至：
+.claude-plugins-data/auto-issue/auto-issue/${CLAUDE_SESSION_ID}/scope-report.md
 ```
 
 **autoissue-scope 以 plan 模式运行。** 流程：
 
-1. autoissue-scope 完成只读分析，输出影响域报告
+1. autoissue-scope 完成只读分析，输出影响域报告并保存为文件
 2. **报告展示给你（用户），你可以编辑修改后 approve**
 3. approve 后 autoissue-scope 退出，输出回到此处
 
 **这是唯一的确认点。** 对分析结果不满意就在 plan 环节 edit。approve 后的版本即最终影响域报告。
+
+**scope 报告已持久化**：`.claude-plugins-data/auto-issue/auto-issue/{session-id}/scope-report.md`。后续 agent 可直接读取。
 
 ---
 
@@ -174,15 +177,13 @@ grep -cE 'def test_|it\(|describe\(|test\(|TEST\(' <路径>
 
 ### 3.5.0 初始化
 
-```bash
-SESSION_ID="${CLAUDE_SESSION_ID}"
-REVIEW_DIR=".claude-plugins-data/auto-issue/auto-issue/$SESSION_ID"
-mkdir -p "$REVIEW_DIR"
-```
+审查产物目录已在 Phase 1 由 scope 创建。scope 报告已持久化至 `$REVIEW_DIR/scope-report.md`。
+
+从 scope-report.md 中提取「需求清单」段（传给 reviewer/checker 使用）。
 
 设置审查参数：`REVIEW_ROUND=0`，`MAX_ROUNDS=3`。
 
-从 scope 报告中提取「需求清单」段（保留在上下文中，传给 reviewer/checker 使用）。
+> `REVIEW_DIR=".claude-plugins-data/auto-issue/auto-issue/$SESSION_ID"`（SESSION_ID 从 scope 阶段获取）
 
 ### 3.5.1 审查循环
 
@@ -201,7 +202,7 @@ $ARGUMENTS
 
 ## 需求清单（逐条核对）
 
-<从 scope 报告中提取的需求清单>
+<从 scope-report.md 提取的需求清单>
 
 ## 输出要求
 
@@ -232,7 +233,7 @@ $ARGUMENTS
 
 ## 需求清单
 
-<从 scope 报告中提取的需求清单>
+<从 scope-report.md 提取的需求清单>
 
 请读取审查报告，对其中每个问题独立验证。
 将完整结论写入 verdict 文件，向我返回简短摘要。
@@ -288,6 +289,7 @@ $ARGUMENTS
 
 ```
 auto-issue/{session-id}/
+├── scope-report.md        ← 影响域报告（Phase 1 scope 写入，含需求清单）
 ├── round-1-review.md      ← 第 1 轮 reviewer 完整报告（含需求覆盖检查）
 ├── round-1-verdict.md     ← 第 1 轮 checker 验证结论（含需求覆盖核对）
 ├── round-2-review.md
@@ -295,7 +297,7 @@ auto-issue/{session-id}/
 └── summary.md             ← 最终审查总结
 ```
 
-需求清单来源：scope 报告（编排器上下文）。review/verdict 文件中均包含需求覆盖信息，审计时可追溯。
+scope-report.md 是全部后续审查的基准文件。reviewer/checker 的需求清单均从中提取。
 
 用户可随时查看中间文件判断审查是否跑偏，或 `git checkout` 回滚到任意轮次之前的状态。
 

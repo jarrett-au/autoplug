@@ -134,7 +134,20 @@ Glob: 相关文件模式
 
 ## Step 5: 输出报告
 
-严格按以下格式输出：
+### 5.1 持久化影响域报告
+
+创建审查产物目录并保存完整报告：
+
+```bash
+mkdir -p ".claude-plugins-data/auto-issue/auto-issue/${CLAUDE_SESSION_ID}"
+cat > ".claude-plugins-data/auto-issue/auto-issue/${CLAUDE_SESSION_ID}/scope-report.md" << 'SCOPE_EOF'
+<完整影响域报告内容>
+SCOPE_EOF
+```
+
+### 5.2 输出格式
+
+严格按以下格式输出（同时写入文件和返回给调用者）：
 
 ```
 ## 影响域报告
