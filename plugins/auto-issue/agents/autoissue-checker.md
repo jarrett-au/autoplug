@@ -22,14 +22,14 @@ color: cyan
 
 编排器会传入：
 1. **审查报告文件路径**：`.claude-plugins-data/auto-issue/auto-issue/{session-id}/round-{N}-review.md`
-2. **需求清单文件路径**：`.claude-plugins-data/auto-issue/auto-issue/{session-id}/requirements.md`
+2. **需求清单**：直接在 prompt 中提供（来自 scope 报告）
 3. **结论保存路径**：`.claude-plugins-data/auto-issue/auto-issue/{session-id}/round-{N}-verdict.md`
 
 ## 执行步骤
 
 ### Step 1: 读取输入
 
-用 `Read` 读取审查报告和需求清单。理解 reviewer 发现了什么问题。
+用 `Read` 读取审查报告。需求清单已在 prompt 中，直接使用。
 
 ### Step 2: 逐项验证
 
@@ -50,7 +50,7 @@ color: cyan
 
 ### Step 3: 需求覆盖核对
 
-对照 requirements.md 中的需求清单，逐条判断变更是否覆盖了该需求。
+对照 prompt 中提供的需求清单，逐条判断变更是否覆盖了该需求。
 
 ### Step 4: 输出结论
 

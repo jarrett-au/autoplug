@@ -180,9 +180,9 @@ REVIEW_DIR=".claude-plugins-data/auto-issue/auto-issue/$SESSION_ID"
 mkdir -p "$REVIEW_DIR"
 ```
 
-从 scope 报告中提取「需求清单」段，写入 `$REVIEW_DIR/requirements.md`。
-
 设置审查参数：`REVIEW_ROUND=0`，`MAX_ROUNDS=3`。
+
+从 scope 报告中提取「需求清单」段（保留在上下文中，传给 reviewer/checker 使用）。
 
 ### 3.5.1 审查循环
 
@@ -201,7 +201,7 @@ $ARGUMENTS
 
 ## 需求清单（逐条核对）
 
-<从 requirements.md 复制的需求清单>
+<从 scope 报告中提取的需求清单>
 
 ## 输出要求
 
@@ -228,10 +228,13 @@ $ARGUMENTS
 ## 验证任务
 
 - 审查报告：<REVIEW_DIR>/round-<REVIEW_ROUND>-review.md
-- 需求清单：<REVIEW_DIR>/requirements.md
 - 结论保存至：<REVIEW_DIR>/round-<REVIEW_ROUND>-verdict.md
 
-请读取这两个文件，对审查报告中的每个问题独立验证。
+## 需求清单
+
+<从 scope 报告中提取的需求清单>
+
+请读取审查报告，对其中每个问题独立验证。
 将完整结论写入 verdict 文件，向我返回简短摘要。
 ```
 
@@ -285,13 +288,14 @@ $ARGUMENTS
 
 ```
 auto-issue/{session-id}/
-├── requirements.md        ← 需求清单（scope 提取）
-├── round-1-review.md      ← 第 1 轮 reviewer 完整报告
-├── round-1-verdict.md     ← 第 1 轮 checker 验证结论
+├── round-1-review.md      ← 第 1 轮 reviewer 完整报告（含需求覆盖检查）
+├── round-1-verdict.md     ← 第 1 轮 checker 验证结论（含需求覆盖核对）
 ├── round-2-review.md
 ├── round-2-verdict.md
 └── summary.md             ← 最终审查总结
 ```
+
+需求清单来源：scope 报告（编排器上下文）。review/verdict 文件中均包含需求覆盖信息，审计时可追溯。
 
 用户可随时查看中间文件判断审查是否跑偏，或 `git checkout` 回滚到任意轮次之前的状态。
 
