@@ -103,3 +103,29 @@ git diff
 - **LGTM** — 需求全部覆盖，无严重问题，最多有少量建议
 - **NEEDS_CHANGES** — 存在严重问题（逻辑错误、安全漏洞、兼容性破坏）或需求未覆盖
 - **RISKS_NOTED** — 需求覆盖但存在值得注意的风险（性能隐患、缺少边界测试等），不阻塞但建议关注
+
+## 输出行为
+
+审查完成后，执行两步：
+
+**Step A：保存完整报告**
+
+将完整审查报告保存至编排器指定的路径。用 Bash 写入：
+
+```bash
+cat > "<REVIEW_FILE_PATH>" << 'REVIEW_EOF'
+<完整报告内容>
+REVIEW_EOF
+```
+
+`<REVIEW_FILE_PATH>` 由编排器在调用时提供，格式为 `.claude-plugins-data/auto-issue/auto-issue/{session-id}/round-{N}-review.md`。
+
+**Step B：返回摘要**
+
+向编排器返回**简短摘要**（≤5 行），格式：
+
+```
+审查完成：{LGTM|NEEDS_CHANGES|RISKS_NOTED} | 发现 {X} 个问题（{Y} 主要 + {Z} 次要）| 需求覆盖 {M}/{K}
+```
+
+**不要向编排器返回完整报告**——完整报告已保存至文件，编排器只需要摘要做决策。

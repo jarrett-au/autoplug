@@ -204,11 +204,28 @@ make ui-check  # 前端变动执行
 - 这样新一轮的 code-review 能看到上一轮的进展，避免重复报告
 
 **提交格式**：
-```bash
-git commit -m "fix(scope): address review findings from Round N
 
-- [修复内容1]
-- [修复内容2]
+根据实际修复内容选择语义化 type，不要用 `review`/`round` 这类元信息作为前缀：
+
+| 修复类型 | type | 示例 |
+|---------|------|------|
+| Bug 修复 / 运行时错误 / 逻辑缺陷 | `fix` | `fix(auth): validate token before refresh to prevent silent failure` |
+| 新增缺失的测试覆盖 | `test` | `test(payment): add unit tests for retry logic edge cases` |
+| 性能优化（减少不必要的计算/渲染） | `perf` | `perf(list): memoize filtered items to prevent redundant re-renders` |
+| 代码重构（等价变换，不改变行为） | `refactor` | `refactor(api): extract request builder into standalone function` |
+| 样式/格式/无功能影响的清理 | `style` | `style(components): fix inconsistent prop ordering` |
+| 文档补充 | `docs` | `docs(config): clarify env variable precedence` |
+| 杂项（依赖更新、配置调整等） | `chore` | `chore(deps): pin minimist to avoid prototype pollution` |
+
+**scope** 取实际涉及的模块/组件名（如 `auth`、`payment`、`draft-hook`），不要用 `review`、`blind-test` 等流程名。
+
+**多条不同类型修复**：用最主要的 type，body 中列出所有修复项。如果修复项差异太大（如同时有 bug fix + 重构），拆为多个 commit。
+
+```bash
+git commit -m "<type>(<scope>): <简短描述，概括本轮修复>
+
+- <具体修复1>
+- <具体修复2>
 
 Co-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>"
 ```
