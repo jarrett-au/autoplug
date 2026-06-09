@@ -1,10 +1,10 @@
 ---
-name: check-comment
+name: cq-check-comment
 description: |
   审查 AI 生成的代码 review 报告——判断问题是否真实存在，给出采纳建议和修复方案。
   当用户提到 review 报告、代码审查报告、AI review、check comment、审查意见时触发。
 context: fork
-agent: comment-checker
+agent: cq-comment-checker
 allowed-tools: Read, Grep, Glob, Bash
 ---
 

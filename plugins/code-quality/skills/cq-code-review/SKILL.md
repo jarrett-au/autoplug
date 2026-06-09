@@ -1,10 +1,10 @@
 ---
-name: code-review
+name: cq-code-review
 description: |
   自主深度代码审查——主动探索代码上下文，输出中文结构化审查报告（安全/性能/正确性）。
   适用于审查 GitHub PR 或本地 git 变更。会自主调用 git、gh、文件读取工具构建完整心智模型。
 context: fork
-agent: code-reviewer
+agent: cq-reviewer
 allowed-tools: Read, Grep, Glob, Bash
 ---
 
