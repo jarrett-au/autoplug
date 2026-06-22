@@ -1,0 +1,38 @@
+{
+  "name": "agent-evolve",
+  "version": "1.2.0",
+  "description": "Agent evolution workflows for self-critique, session archaeology, and turning useful patterns into reusable skills.",
+  "author": {
+    "name": "Jarrett",
+    "email": "zhongyu.ou@gmail.com"
+  },
+  "homepage": "https://github.com/jarrett-au/autoplug",
+  "repository": "https://github.com/jarrett-au/autoplug",
+  "license": "MIT",
+  "keywords": [
+    "self-critique",
+    "knowledge-management",
+    "skills",
+    "agent-evolution",
+    "reflection"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Agent Evolve",
+    "shortDescription": "Self-critique, session archaeology, and skill evolution",
+    "longDescription": "Agent improvement workflows for iterative self-critique, cross-session pattern discovery, and extracting durable knowledge from conversations into reusable Skills, Agents, Hooks, or Plugins.",
+    "developerName": "Jarrett",
+    "category": "Productivity",
+    "capabilities": [
+      "Read",
+      "Write",
+      "Interactive"
+    ],
+    "defaultPrompt": [
+      "Run a self-critique loop on this draft.",
+      "Surprise me with patterns from previous sessions.",
+      "Extract reusable knowledge from this conversation."
+    ],
+    "websiteURL": "https://github.com/jarrett-au/autoplug"
+  }
+}

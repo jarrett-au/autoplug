@@ -1,5 +1,10 @@
 ---
-description: 将大需求拆分为多个独立可执行的 GitHub Issues。分析 codebase → 输出拆分方案 → 用户确认 → 批量创建。
+name: auto-epic
+description: |
+  Use when splitting a large requirement, product idea, epic, roadmap item, or vague feature request
+  into multiple independent GitHub issues. Analyzes the codebase, proposes issue boundaries, asks for
+  confirmation, then creates issues in batch. Trigger for 'split this requirement', 'create issues
+  from this epic', 'break this down', or 'turn this spec into GitHub issues'.
 argument-hint: <大需求描述>
 ---
 

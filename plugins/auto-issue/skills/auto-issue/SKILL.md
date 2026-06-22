@@ -1,5 +1,10 @@
 ---
-description: 全自动处理单条 issue。分析影响域 → 确认 → TDD 开发 → 验证 → 审查 → PR（按需）。
+name: auto-issue
+description: |
+  Use when implementing a single GitHub issue, issue URL, bug report, or feature request end-to-end.
+  Analyzes impact, confirms scope, follows TDD development, verifies behavior, reviews changes, and
+  opens a PR when requested. Trigger for 'implement this issue', 'fix this GitHub issue', 'work on
+  issue #N', or 'turn this issue into a PR'.
 argument-hint: <issue 描述或 GitHub issue URL>
 ---
 

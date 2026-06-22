@@ -1,6 +1,10 @@
 ---
 name: skill-auto-discover
-description: 提取当前对话中的有价值知识点（最佳实践、解决流程），并自动创建或更新 Skill、Hook、Agent 或 Plugin 配置。
+description: |
+  Use when extracting durable knowledge, reusable procedures, best practices, solved errors, or
+  workflow patterns from a conversation or completed task, then creating or updating Skills, Agents,
+  Hooks, or Plugin configuration. Trigger for 'learn from this', 'update the skill', 'record this
+  pattern', 'capture this workflow', or 'turn this into a reusable skill'.
 when_to_use: 当用户说"从这次对话中学习"、"提炼经验"、"更新skill"、"记录这个pattern"或明确要求从 session 中捕获知识时触发。
 allowed-tools: Read, Edit, Write, Bash
 ---

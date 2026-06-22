@@ -1,8 +1,10 @@
 ---
 name: spec-forge
 description: |
-  通过迭代访谈创建详细规格文档（PRD/设计文档）。深度挖掘隐性复杂性和技术权衡。
-  当用户要求创建 spec、PRD、设计文档，或需要需求澄清时触发。
+  Use when turning a vague idea, product request, feature concept, or implementation goal into a
+  detailed PRD, design document, or engineering spec. Uses iterative questioning to surface hidden
+  complexity, constraints, edge cases, and trade-offs. Trigger for 'write a spec', 'make a PRD',
+  'clarify requirements', 'design this feature', or 'turn this idea into an implementation plan'.
 allowed-tools: Read, Grep, Glob, Bash, Write, Edit
 ---
 

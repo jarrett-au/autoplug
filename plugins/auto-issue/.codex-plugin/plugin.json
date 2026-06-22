@@ -1,0 +1,38 @@
+{
+  "name": "auto-issue",
+  "version": "1.2.0",
+  "description": "Issue automation workflows for implementing GitHub issues and splitting large requirements into executable issue sets.",
+  "author": {
+    "name": "Jarrett",
+    "email": "zhongyu.ou@gmail.com"
+  },
+  "homepage": "https://github.com/jarrett-au/autoplug",
+  "repository": "https://github.com/jarrett-au/autoplug",
+  "license": "MIT",
+  "keywords": [
+    "github-issues",
+    "tdd",
+    "automation",
+    "planning",
+    "pull-request"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Auto Issue",
+    "shortDescription": "Implement issues and split large requirements",
+    "longDescription": "Automated issue workflows for analyzing GitHub issues, planning implementation, TDD development, validation, review, pull request creation, and decomposing large requirements into concrete GitHub issues.",
+    "developerName": "Jarrett",
+    "category": "Coding",
+    "capabilities": [
+      "Read",
+      "Write",
+      "Interactive"
+    ],
+    "defaultPrompt": [
+      "Implement this GitHub issue.",
+      "Split this large requirement into GitHub issues.",
+      "Analyze this issue and create a development plan."
+    ],
+    "websiteURL": "https://github.com/jarrett-au/autoplug"
+  }
+}

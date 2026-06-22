@@ -1,8 +1,10 @@
 # AutoPlug
 
-Claude Code 自动化能力插件集 — Coding Pipeline + Code Quality + Agent Evolution。
+Claude Code / Codex 自动化能力插件集 — Coding Pipeline + Code Quality + Agent Evolution。
 
 ## 安装
+
+### Claude Code
 
 ```bash
 claude plugin marketplace add jarrett-au/autoplug
@@ -10,6 +12,16 @@ claude plugin install auto-issue
 claude plugin install code-quality
 claude plugin install agent-evolve
 ```
+
+### Codex
+
+AutoPlug also exposes a Codex canonical marketplace at:
+
+```text
+.agents/plugins/marketplace.json
+```
+
+Each plugin includes a Codex manifest under `.codex-plugin/plugin.json` and shares the same `skills/` directory with the Claude plugin.
 
 每个 plugin 可单独安装，按需选用。
 
@@ -57,6 +69,7 @@ claude plugin install agent-evolve
 - **零侵入**：所有 plugin 不修改项目 CLAUDE.md、rules、settings.json
 - **Plan vs Auto**：决策点用 plan，评估点用 auto
 - **独立分发**：每个 plugin 可单独安装，不需要整个 marketplace
+- **双 runtime 入口**：Claude Code 使用 `.claude-plugin/`，Codex 使用 `.agents/plugins/` + `.codex-plugin/`，共享同一份 skills
 
 ## License
 

@@ -1,6 +1,10 @@
 ---
 name: design-spec
-description: "Generate interactive HTML design-spec tools that force implicit architectural/UX decisions into explicit forks. User adjusts → exports a structured decision-ledger spec (traced to requirements) for Claude to implement, or freezes a clean dev-reference HTML. Locks design-system tokens instead of re-speccing visuals."
+description: |
+  Use when creating an interactive HTML design-spec tool for UX, architecture, or product decisions
+  where implicit choices must become explicit forks. The user adjusts options and exports a structured
+  decision-ledger spec traced to requirements. Trigger for 'make a design spec', 'create an
+  interactive spec', 'explore UX decisions', or 'freeze design-system tokens'.
 user-invocable: true
 argument-hint: "[description of what to spec]"
 ---

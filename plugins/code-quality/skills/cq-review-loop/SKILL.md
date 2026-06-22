@@ -1,8 +1,10 @@
 ---
 name: cq-review-loop
 description: |
-  自动化代码审查闭环：code review → 验证结论 → 修复真实问题 → 测试 → 重复。
-  当用户提到 review loop、审查循环、自动审查修复、循环审查，或说"帮我审查并修复这个分支"时触发。
+  Use when running a closed-loop quality pass over a branch, pull request, or code change: review,
+  verify findings, fix real issues, test, and repeat until no important issues remain. Trigger for
+  'review and fix this branch', 'run review loop', 'audit then patch', or 'improve this implementation
+  until clean'.
 allowed-tools: Read, Grep, Glob, Bash, Write, Edit
 ---
 

@@ -1,0 +1,39 @@
+{
+  "name": "code-quality",
+  "version": "1.5.0",
+  "description": "Code quality workflows for review, validation, tests, specs, project rules, and production scaffolding.",
+  "author": {
+    "name": "Jarrett",
+    "email": "zhongyu.ou@gmail.com"
+  },
+  "homepage": "https://github.com/jarrett-au/autoplug",
+  "repository": "https://github.com/jarrett-au/autoplug",
+  "license": "MIT",
+  "keywords": [
+    "code-review",
+    "testing",
+    "quality",
+    "spec",
+    "rules",
+    "ci"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Code Quality",
+    "shortDescription": "Review, test, and improve code quality",
+    "longDescription": "Reusable code quality workflows for deep code review, validating AI review comments, closed-loop fixes, test writing, requirements specs, design specs, project rules, and production scaffolding.",
+    "developerName": "Jarrett",
+    "category": "Coding",
+    "capabilities": [
+      "Read",
+      "Write",
+      "Interactive"
+    ],
+    "defaultPrompt": [
+      "Review the current code changes.",
+      "Write tests for this feature.",
+      "Generate coding rules for this project."
+    ],
+    "websiteURL": "https://github.com/jarrett-au/autoplug"
+  }
+}

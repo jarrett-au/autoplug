@@ -1,8 +1,9 @@
 ---
 name: project-scaffold
 description: |
-  为项目生成生产级 Makefile、Docker 部署配置和 GitHub Actions CI/CD 工作流。
-  当用户提到 Makefile、Docker、CI/CD、GitHub Actions、项目脚手架、部署配置时触发。
+  Use when adding or improving production project scaffolding such as Makefiles, Dockerfiles, docker-
+  compose, GitHub Actions CI/CD, deployment scripts, or developer workflow commands. Trigger for 'add
+  Makefile', 'set up Docker', 'create CI', 'scaffold deployment', or 'productionize this project'.
 allowed-tools: Read, Grep, Glob, Bash, Write, Edit
 ---
 

@@ -1,8 +1,10 @@
 ---
 name: session-archaeologist
 description: |
-  跨会话模式挖掘——搜索项目记忆、代码历史和配置，发现用户自己没注意到的行为模式、认知盲区、隐性体系和矛盾。
-  触发词："surprise me"、"有什么洞见"、"聊聊我们之前聊过的"、"你发现我什么模式"。
+  Use when searching past sessions, project memory, code history, or configuration to discover hidden
+  user patterns, contradictions, recurring needs, implicit preferences, or surprising insights.
+  Trigger for 'surprise me', 'what patterns do you see', 'what have we talked about before', 'find my
+  blind spots', or 'session archaeology'.
 allowed-tools: Read, Grep, Glob, Bash
 ---
 

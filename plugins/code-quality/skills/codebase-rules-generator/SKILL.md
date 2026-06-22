@@ -1,8 +1,10 @@
 ---
 name: codebase-rules-generator
 description: |
-  从代码库分析生成超精简 Claude Code rules。每个字都要 earn its place。
-  当用户要求生成 .claude/rules、create claude rules、分析代码库生成 AI 指导时触发。
+  Use when generating compact project rules or coding-agent instructions from an existing codebase.
+  Analyzes architecture, conventions, tests, build commands, and pitfalls, then writes minimal rules
+  where every word earns its place. Trigger for 'generate CLAUDE.md rules', 'create coding rules',
+  'analyze this repo for agent instructions', or 'write project rules'.
 allowed-tools: Read, Grep, Glob, Bash, Write, Edit
 ---
 

@@ -1,8 +1,10 @@
 ---
 name: self-critique-loop
 description: |
-  自省迭代循环——从目标受众/用户视角审视产出，诚实批判，反复改进直到 genuine aha moment。
-  当用户要求"跑个 loop"、"自我迭代"、"深挖"、"自省"、"从观众视角审视"或明确要求不带偏见地探索某个方向时触发。
+  Use when improving drafts, plans, analyses, strategies, articles, or deliverables through repeated
+  self-critique from the target audience or user's perspective until a genuine aha moment appears.
+  Trigger for 'run a loop', 'self critique', 'iterate deeper', 'be more honest', 'from the audience
+  perspective', or 'push this further'.
 allowed-tools: Read, Edit, Write, Bash
 ---
 

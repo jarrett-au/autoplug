@@ -1,8 +1,10 @@
 ---
 name: write-tests
 description: |
-  编写高质量测试——覆盖后端 API、Service、前端组件。涵盖 pytest + FastAPI、Vitest + RTL、Go testing。
-  触发时机：实现新功能、修复 bug、测试失败、用户要求写测试。
+  Use when writing or improving tests for new code, changed behavior, bug fixes, APIs, services, UI
+  components, or regression coverage. Supports pytest/FastAPI, Vitest/RTL, Go testing, and project-
+  specific test conventions. Trigger for 'write tests', 'add coverage', 'test this feature', 'create
+  regression tests', or 'fix failing tests'.
 allowed-tools: Read, Grep, Glob, Bash, Write, Edit
 ---
 
