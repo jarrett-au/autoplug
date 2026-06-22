@@ -10,9 +10,11 @@ allowed-tools: Read, Grep, Glob, Bash, Write, Edit
 
 你的任务是执行一个"审查 → 验证 → 修复 → 测试"的自动化循环，持续改进代码质量。
 
-**核心价值**：AI review 工具会产生误报，直接照单全收会引入不必要的改动。通过 review + 二次验证的双重过滤，只修复真正有价值的问题。
+**核心价值**：AI review 工具会产生误报，直接照单全收会引入不必要的改动。Review 阶段必须产出可验证证据，Check-comment 阶段只审计证据是否成立，最终只修复 accepted blocking 和明确值得修的 downgraded risk。
 
 **架构**：code-review 和 check-comment 在独立 subagent（`context: fork`）中运行，主对话仅保留编排状态和简要摘要，避免中间产出的 token 累积。
+
+**核心原则**：Reviewer may be wrong. Therefore every blocking claim must be cheap to check. 没有复现命令、失败测试、需求不匹配证据、静态证明、安全触发路径或契约违背证据的问题，不允许 blocking。
 
 **当前 Session**: `${CLAUDE_SESSION_ID}`
 
@@ -28,14 +30,14 @@ allowed-tools: Read, Grep, Glob, Bash, Write, Edit
                   │
                   ▼
 ┌─────────────────────────────────────────────────────┐
-│  阶段1: Code Review                                  │
-│  → 激活 code-review 技能，产出中文审查报告            │
+│  阶段1: Evidence-Backed Code Review                  │
+│  → 产出带证据的 finding；blocking 必须可验证          │
 └─────────────────┬───────────────────────────────────┘
                   │
                   ▼
 ┌─────────────────────────────────────────────────────┐
-│  阶段2: 验证 Review 结论                             │
-│  → 激活 check-comment 技能，过滤误报和过度建议        │
+│  阶段2: Evidence Audit                               │
+│  → 验证证据是否成立，accepted/downgraded/rejected    │
 └─────────────────┬───────────────────────────────────┘
                   │
                   ▼
@@ -101,7 +103,7 @@ mkdir -p ".claude-plugins-data/code-quality/review-loop/${CLAUDE_SESSION_ID}"
 
 ---
 
-## 二、第一阶段：Code Review（发现层）
+## 二、第一阶段：Evidence-Backed Code Review（发现层）
 
 ### 2.1 执行步骤
 
@@ -113,17 +115,32 @@ mkdir -p ".claude-plugins-data/code-quality/review-loop/${CLAUDE_SESSION_ID}"
 # Subagent 会自动执行以下命令，此处仅供参考
 git diff main...HEAD --stat
 git diff main...HEAD --name-only
+git diff main...HEAD
 ```
 
-### 2.2 输出说明
+### 2.2 Finding 要求
 
-subagent 返回的摘要包含：状态、风险等级、发现的问题数量。完整报告已保存至文件。
+reviewer 输出的每个 finding 都必须是结构化证据包：
+
+```text
+claim + evidence + reproduction + severity + fix_expectation + checker_instructions
+```
+
+分级规则：
+
+- `blocking`：必须带可验证证据。证据类型只能是 failing_test、repro_command、requirement_mismatch、static_proof、security_exploit_path 或 contract_violation。
+- `risk`：有合理担忧但缺少低成本复现，不阻塞自动合并。
+- `nit`：风格/命名/局部可读性建议，不进入自动修复清单。
+
+### 2.3 输出说明
+
+subagent 返回的摘要包含：状态、风险等级、blocking/risk/nit 数量。完整报告已保存至文件。
 
 如需查看完整报告，读取 `.claude-plugins-data/code-quality/review-loop/${CLAUDE_SESSION_ID}/` 下最新的 `round-*-review.md`。
 
 ---
 
-## 三、第二阶段：验证 Review 结论（过滤层）
+## 三、第二阶段：Evidence Audit（证据审计层）
 
 ### 3.1 执行步骤
 
@@ -133,28 +150,29 @@ check-comment 在独立 subagent 中运行，自动找到最新的 review 文件
 
 ### 3.2 核心目的
 
-过滤掉 review 中的误报和过度建议。对每个问题独立判断：
+check-comment 不再做泛泛的“二次意见”。它只审计 reviewer 的证据链是否成立：
 
-| 判断维度 | 说明 |
-|---------|------|
-| 问题真实性 | 读取实际代码，确认问题是否真实存在 |
-| 严重程度 | 评估是"必须修复"、"建议修复"还是"可忽略" |
-| 修复合理性 | 修复建议是否可行，是否有更好的方案 |
-| 需求准确性 | 如果报告涉及需求覆盖判断，读取 context.json 验证结论是否准确 |
+- evidence 是否存在
+- reproduction 是否可执行或可检查
+- 当前代码是否真的触发 claim
+- 失败原因是否与 claim 一致
+- finding 是否绑定当前 diff 或需求上下文
+- severity 是否准确
+- fix_expectation 是否小而精确
 
 ### 3.3 输出格式
 
-对每个问题标注处理意见：
+对每个 finding 标注证据审计结论：
 
-| 标记 | 含义 | 示例 |
-|-----|------|------|
-| 采纳 | 问题真实，建议合理，立即修复 | 变量遮蔽风险 |
-| 部分采纳 | 问题真实但建议需调整 | 添加日志而非报错 |
-| 不采纳 | 误报或优先级过低 | 合理的防御性编程 |
+| 标记 | 含义 | 是否进入修复清单 |
+|-----|------|----------------|
+| accepted | 证据成立，严重程度合理 | accepted blocking 进入 |
+| downgraded | 问题可能存在，但证据不足以 blocking，降为 risk/nit | 只有明确值得修的 risk 进入 |
+| rejected | 误报、无法复现、与当前 diff 无关或 taste-only | 不进入 |
 
 将结论保存至 `.claude-plugins-data/code-quality/review-loop/{session-id}/round-{N}-verdict.md`（由 subagent 自动完成）。
 
-主对话仅收到简要摘要（采纳/不采纳数量）。如需查看完整结论，读取该文件。
+主对话仅收到简要摘要（accepted/downgraded/rejected 数量）。如需查看完整结论，读取该文件。
 
 ---
 
@@ -162,13 +180,25 @@ check-comment 在独立 subagent 中运行，自动找到最新的 review 文件
 
 ### 4.1 获取修复清单
 
-读取 `.claude-plugins-data/code-quality/review-loop/${CLAUDE_SESSION_ID}/` 下最新的 `round-*-verdict.md`，获取标记为"采纳"或"部分采纳"的问题列表。
+读取 `.claude-plugins-data/code-quality/review-loop/${CLAUDE_SESSION_ID}/` 下最新的 `round-*-verdict.md`，获取 `Developer Action List`。
+
+只修复：
+
+- accepted blocking
+- 明确值得修、且修复成本小的 downgraded risk
+
+不要修复：
+
+- rejected finding
+- pure nit
+- 没有验证路径的泛泛建议
 
 ### 4.2 修复原则
 
 ✅ **好的修复**：
 - 小而精确，不做超出问题范围的改动
-- 如果 check-comment 给出了更好的方案，优先使用
+- 如果 check-comment 给出了更小的修复方案，优先使用
+- 修复后必须跑原 finding 的 verification to close（测试命令/复现命令/静态检查）
 - 修复后运行类型检查
 
 ❌ **避免的修复**：
@@ -176,7 +206,7 @@ check-comment 在独立 subagent 中运行，自动找到最新的 review 文件
 - 在修复过程中引入额外改动
 - 跳过测试验证
 
-如果阶段 2 判定所有问题都"不采纳"，直接进入终止判断。
+如果阶段 2 没有 accepted blocking，也没有明确值得修的 downgraded risk，直接进入终止判断。
 
 ---
 
@@ -238,9 +268,9 @@ Co-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>"
 
 | 条件 | 说明 |
 |-----|------|
-| 1. 无需修复 | 阶段 2 判定所有问题都是误报或不值得修复，**且**需求无 missing |
+| 1. 无需修复 | 阶段 2 没有 accepted blocking，也没有明确值得修的 downgraded risk，**且**需求无 missing |
 | 2. 达到轮数上限 | 已完成 3 轮循环（防止无限循环） |
-| 3. 连续误报 | 连续两轮 review 发现同类问题且都被判定为不采纳 |
+| 3. 连续弱证据 | 连续两轮 review 的 blocking 都因证据不足被 downgraded/rejected |
 
 **注意**：如果 context.json 中仍有 `status: "missing"` 的需求，不触发条件 1——需求没做完就停是最大的浪费。
 
@@ -253,9 +283,10 @@ Co-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>"
 ```markdown
 ## 第 N 轮循环完成
 
-- Review 发现: X 个问题（Y个主要 + Z个次要）
-- Check-comment 采纳: A 个
-- 实际修复: [简要描述，如"变量重命名、gitignore"]
+- Review 发现: blocking {B} 个 / risks {R} 个 / nits {N} 个
+- Evidence audit: accepted {A} 个 / downgraded {D} 个 / rejected {J} 个
+- 实际修复: [简要描述，如"补充并发复现测试 + 修复幂等逻辑"]
+- 证据闭环: ✅ 原 verification to close 已通过 / ❌ 失败原因
 - 测试: ✅ XXX passed / ❌ 失败原因
 ```
 
