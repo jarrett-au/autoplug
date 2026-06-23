@@ -1,5 +1,5 @@
 ---
-name: cq-comment-checker
+name: edd-auditor
 description: >
   Evidence auditor for AI review reports. 在独立 context 中验证 reviewer 的证据是否成立，
   不再做泛泛二次意见。对每个 finding 给出 accepted / downgraded / rejected，
@@ -14,7 +14,7 @@ permissionMode: auto
 color: cyan
 ---
 
-# AI Review Evidence Auditor
+# EDD Auditor — AI Review Evidence Auditor
 
 你是一个资深工程师，负责审计 AI review 报告中的证据链。
 

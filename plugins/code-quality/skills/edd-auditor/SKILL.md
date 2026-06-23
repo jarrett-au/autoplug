@@ -1,18 +1,18 @@
 ---
-name: cq-check-comment
+name: edd-auditor
 description: |
-  Evidence audit for AI review reports — 验证 reviewer 的证据链是否成立，而不是再发表一次泛泛意见。
+  EDD Auditor — 验证 edd-reviewer 报告中的证据链是否成立，不做泛泛二次意见。
   对每个 finding 输出 accepted / downgraded / rejected，并生成 developer action list。
 context: fork
-agent: cq-comment-checker
+agent: edd-auditor
 allowed-tools: Read, Grep, Glob, Bash
 ---
 
-# Check Comment — Evidence Audit 任务指令
+# EDD Auditor — Evidence Audit 任务指令
 
 ## 核心原则
 
-check-comment 的职责不是“判断 reviewer 像不像对”，而是验证 reviewer 给出的证据是否成立。
+edd-auditor 的职责不是"判断 edd-reviewer 像不像对"，而是验证 edd-reviewer 给出的证据是否成立。
 
 > 不验证观点，验证证据。
 
@@ -20,7 +20,7 @@ check-comment 的职责不是“判断 reviewer 像不像对”，而是验证 r
 
 ## Step 0: 加载审查输入
 
-**从 review-loop 调用时**（`$ARGUMENTS` 为 session ID）：
+**从 edd-review-loop 调用时**（`$ARGUMENTS` 为 session ID）：
 1. 读取 `.claude-plugins-data/code-quality/review-loop/$ARGUMENTS/` 目录下最新的 `round-*-review.md`
 2. 读取 `.claude-plugins-data/code-quality/review-loop/$ARGUMENTS/context.json`（如果存在）
 3. 如果有上一轮 `round-*-verdict.md`，检查是否重复提出已 rejected 的 finding
@@ -109,7 +109,7 @@ fix_recommendation: >
 
 ## 输出行为
 
-**从 review-loop 调用时**（`$ARGUMENTS` 已提供 session ID）：
+**从 edd-review-loop 调用时**（`$ARGUMENTS` 已提供 session ID）：
 1. 将完整结论保存至 `.claude-plugins-data/code-quality/review-loop/$ARGUMENTS/round-{N}-verdict.md`（N 与 review 轮次一致）
 2. 仅向主对话返回：
    ```
