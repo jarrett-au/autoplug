@@ -32,9 +32,9 @@ claude plugin install agent-evolve
 
 | 命令 | 用途 |
 |------|------|
-| `/review-loop` | 审查 → 验证 → 修复 → 测试的自动化循环，持续改进代码质量 |
-| `/code-review` | 自主资深级代码审查，作为质量守门人 |
-| `/check-comment` | 对 AI 生成的 review 报告进行二次审查，独立判断问题真实性和严重程度 |
+| `/review-loop` | 证据驱动审查 → 证据审计 → 修复 → 验证的自动化循环 |
+| `/code-review` | 自主资深级代码审查，blocking 问题必须带可验证证据 |
+| `/check-comment` | 对 AI review finding 做证据审计，输出 accepted/downgraded/rejected |
 | `/write-tests` | 基于项目上下文编写高质量测试 |
 | `/spec-forge` | 将高层需求转化为详细的规格文档（迭代式） |
 | `/codebase-rules-generator` | 生成超精简的项目 rules 文档 |
