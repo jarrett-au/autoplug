@@ -28,7 +28,7 @@ claude plugin install agent-evolve
 
 ### code-quality — 代码质量工具集
 
-深度审查、自动修复、测试编写、规格文档生成、交接文档，8 个技能覆盖代码质量全链路。
+深度审查、自动修复、测试编写、规格文档生成、交接文档、证据型 Issue 捕获，9 个技能覆盖代码质量全链路。
 
 | 命令 | 用途 |
 |------|------|
@@ -38,6 +38,7 @@ claude plugin install agent-evolve
 | `/write-tests` | 基于项目上下文编写高质量测试 |
 | `/spec-forge` | 将高层需求转化为详细的规格文档（迭代式） |
 | `/handoff` | 生成高信噪比交接文档，让下一轮 agent 无缝接手 |
+| `/issue-capture` | 将旁支发现整理成有证据的 GitHub issue draft |
 | `/codebase-rules-generator` | 生成超精简的项目 rules 文档 |
 | `/project-scaffold` | 生成生产级 Makefile、Docker 部署和 GitHub Actions CI/CD 配置 |
 
