@@ -1,7 +1,7 @@
 {
   "name": "code-quality",
-  "version": "1.5.0",
-  "description": "代码质量工具集：证据驱动审查 + AI 报告证据审计 + 闭环修复 + 测试编写 + 规格文档 + Rules 生成 + 项目脚手架",
+  "version": "1.6.0",
+  "description": "代码质量工具集：审查、验证、测试、规格、交接、问题捕获与项目规范生成",
   "author": {
     "name": "Jarrett",
     "email": "zhongyu.ou@gmail.com"
