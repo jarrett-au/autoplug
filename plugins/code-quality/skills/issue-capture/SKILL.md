@@ -5,6 +5,7 @@ description: |
   当用户要求记录 issue、先记下来、后面单独处理、不要污染当前分支时触发。
 argument-hint: "要记录什么问题？是否直接创建 issue？"
 allowed-tools: Read, Grep, Glob, Bash, Write
+model: opus
 ---
 
 # Issue Capture

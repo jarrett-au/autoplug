@@ -6,6 +6,7 @@ description: |
 context: fork
 agent: edd-reviewer
 allowed-tools: Read, Grep, Glob, Bash
+model: opus
 ---
 
 # EDD Reviewer — Evidence-Backed 审查指令
