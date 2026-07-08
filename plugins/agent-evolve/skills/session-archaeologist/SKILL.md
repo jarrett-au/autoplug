@@ -4,6 +4,7 @@ description: |
   跨会话模式挖掘——搜索项目记忆、代码历史和配置，发现用户自己没注意到的行为模式、认知盲区、隐性体系和矛盾。
   触发词："surprise me"、"有什么洞见"、"聊聊我们之前聊过的"、"你发现我什么模式"。
 allowed-tools: Read, Grep, Glob, Bash
+model: opus
 ---
 
 # Session Archaeologist — 跨会话模式挖掘

@@ -3,6 +3,7 @@ name: design-spec
 description: "Generate interactive HTML design-spec tools that force implicit architectural/UX decisions into explicit forks. User adjusts → exports a structured decision-ledger spec (traced to requirements) for Claude to implement, or freezes a clean dev-reference HTML. Locks design-system tokens instead of re-speccing visuals."
 user-invocable: true
 argument-hint: "[description of what to spec]"
+model: opus
 ---
 
 # Design Spec

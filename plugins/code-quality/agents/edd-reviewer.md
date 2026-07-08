@@ -9,7 +9,7 @@ tools:
   - Grep
   - Glob
   - Bash
-model: sonnet
+model: opus
 permissionMode: auto
 color: yellow
 ---

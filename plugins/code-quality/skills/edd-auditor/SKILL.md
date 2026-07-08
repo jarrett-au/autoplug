@@ -6,6 +6,7 @@ description: |
 context: fork
 agent: edd-auditor
 allowed-tools: Read, Grep, Glob, Bash
+model: opus
 ---
 
 # EDD Auditor — Evidence Audit 任务指令

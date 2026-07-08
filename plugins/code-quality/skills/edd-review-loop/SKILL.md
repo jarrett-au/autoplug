@@ -4,6 +4,7 @@ description: |
   Evidence-Driven 审查闭环：edd-reviewer 产出带证据的 findings → edd-auditor 验证证据 → 修复 accepted 问题 → 测试 → 重复。
   当用户提到 review loop、审查循环、自动审查修复、循环审查，或说"帮我审查并修复这个分支"时触发。
 allowed-tools: Read, Grep, Glob, Bash, Write, Edit
+model: opus
 ---
 
 # EDD Review Loop — Evidence-Driven 审查循环

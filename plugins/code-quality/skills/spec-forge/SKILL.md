@@ -4,6 +4,7 @@ description: |
   通过迭代访谈创建详细规格文档（PRD/设计文档）。深度挖掘隐性复杂性和技术权衡。
   当用户要求创建 spec、PRD、设计文档，或需要需求澄清时触发。
 allowed-tools: Read, Grep, Glob, Bash, Write, Edit
+model: opus
 ---
 
 # Spec Forge
