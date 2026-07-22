@@ -28,10 +28,11 @@ claude plugin install agent-evolve
 
 ### code-quality — 代码质量工具集
 
-风险分级并行审查、证据审计、增量复审、自动修复、测试编写、规格文档、交接与证据型 Issue 捕获。
+行为保持型代码精简、风险分级并行审查、证据审计、增量复审、自动修复、测试编写、规格文档、交接与证据型 Issue 捕获。
 
 | 命令 | 用途 |
 |------|------|
+| `/code-simplifier [scope] [--dry-run]` | 精简近期改动：并行发现、串行修改、逐项验证行为不变 |
 | `/edd-review-loop {auto,low,medium,high}` | 风险分级 → change-unit 并行审查 → 证据审计 → 修复 → 增量复审 |
 | `/edd-reviewer` | 自主资深级代码审查，blocking 问题必须带可验证证据 |
 | `/edd-auditor` | 对 AI review finding 做证据审计，输出 accepted/downgraded/rejected |
