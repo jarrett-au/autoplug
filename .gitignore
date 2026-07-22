@@ -1,3 +1,4 @@
 .backups/
 .DS_Store
 .claude-plugins-data/code-quality/review-loop/
+.claude-plugins-data/code-quality/code-simplifier/
