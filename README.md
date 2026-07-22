@@ -28,13 +28,13 @@ claude plugin install agent-evolve
 
 ### code-quality — 代码质量工具集
 
-深度审查、自动修复、测试编写、规格文档生成、交接文档、证据型 Issue 捕获，9 个技能覆盖代码质量全链路。
+风险分级并行审查、证据审计、增量复审、自动修复、测试编写、规格文档、交接与证据型 Issue 捕获。
 
 | 命令 | 用途 |
 |------|------|
-| `/review-loop` | 证据驱动审查 → 证据审计 → 修复 → 验证的自动化循环 |
-| `/code-review` | 自主资深级代码审查，blocking 问题必须带可验证证据 |
-| `/check-comment` | 对 AI review finding 做证据审计，输出 accepted/downgraded/rejected |
+| `/edd-review-loop {auto,low,medium,high}` | 风险分级 → change-unit 并行审查 → 证据审计 → 修复 → 增量复审 |
+| `/edd-reviewer` | 自主资深级代码审查，blocking 问题必须带可验证证据 |
+| `/edd-auditor` | 对 AI review finding 做证据审计，输出 accepted/downgraded/rejected |
 | `/write-tests` | 基于项目上下文编写高质量测试 |
 | `/spec-forge` | 将高层需求转化为详细的规格文档（迭代式） |
 | `/handoff` | 生成高信噪比交接文档，让下一轮 agent 无缝接手 |
