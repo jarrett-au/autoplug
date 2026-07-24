@@ -1,6 +1,6 @@
 ---
 name: branch-namer
-description: 从当前工作/代码变更生成符合 conventional 前缀规范的 kebab-case 分支名，给出主推荐 + 备选与重命名命令。
+description: 从当前工作/代码变更生成符合 conventional 前缀规范的 kebab-case 分支名，并默认自动重命名当前分支；传入 `--draft` 时仅给出建议。
 when_to_use: 用户想给分支起名/改名，或说"起个分支名""branch name""重命名当前分支""这功能该叫什么分支"。
 allowed-tools: Bash(git log:*) Bash(git diff:*) Bash(git rev-parse:*) Bash(git branch:*) Bash(git status:*)
 user-invocable: true
@@ -17,7 +17,8 @@ model: haiku
 2. **选前缀 = 主导变更类型**（见下表）。混合类型取**最主要**的那个：新增特性为主、夹带少量 fix/重构 → 仍是 `feat/`。若两类同等重要且割裂，提示用户分支本身可能该拆。
 3. **提炼 slug**：2-4 个词的名词短语，描述"做了什么"而非"怎么做"，全小写连字符。
 4. **输出 1 个主推荐 + 2-3 个备选**，每个备选一句话理由（更短 / 更强调某面 / 折中）。
-5. 附上重命名命令：`git branch -m <new-name>`（仅当用户在该分支上想改名）。
+5. **默认执行重命名。** 除非调用中包含 `--draft`，立即用 `git branch -m <主推荐>` 重命名当前分支，并在输出中明确报告实际执行的名称。
+6. **`--draft` 模式只给建议。** 不执行任何改名操作；输出主推荐、备选，以及可由用户自行执行的 `git branch -m <主推荐>` 命令。
 
 ## 前缀对照
 
@@ -48,9 +49,13 @@ model: haiku
 - 主推荐：`feat/configurable-display-timezone`
 - 备选：`feat/app-timezone`（最短，对应配置项）、`feat/unified-time-handling`（强调统一全链路）、`feat/display-timezone`（折中）
 
+默认模式已执行：
+
 ```bash
 git branch -m feat/configurable-display-timezone
 ```
+
+`/branch-namer --draft` 只展示上述命令，不执行重命名。
 
 ## 反例
 
