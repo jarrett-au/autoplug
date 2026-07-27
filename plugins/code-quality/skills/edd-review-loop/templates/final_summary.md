@@ -1,27 +1,43 @@
-## 🏁 Review Loop 完成 - 最终总结
+## EDD Review Loop 完成
 
 ### 执行统计
-| 轮次 | Review findings | Evidence audit | 实际修复 | 证据闭环 | 测试 |
-|-----|-----------------|----------------|---------|----------|------|
-| 1 | B:{B1} / R:{R1} / N:{N1} | A:{A1} / D:{D1} / J:{J1} | {简要} | ✅ | ✅ |
-| 2 | B:{B2} / R:{R2} / N:{N2} | A:{A2} / D:{D2} / J:{J2} | {简要} | ✅ | ✅ |
-| 3 | B:{B3} / R:{R3} / N:{N3} | A:{A3} / D:{D3} / J:{J3} | {简要} | ✅ | ✅ |
 
-### 累计修复内容
+| 轮次 | Review findings | Evidence audit | Action classification | 实际修复 | 增量闭环 |
+|---|---|---|---|---|---|
+| 1 | B:{B1} / R:{R1} / N:{N1} | A:{A1} / D:{D1} / J:{J1} / H:{H1} | F:{F1} / Deferred:{DF1} / Decision:{ND1} | {简要} | {closure1} |
+| 2 | B:{B2} / R:{R2} / N:{N2} | A:{A2} / D:{D2} / J:{J2} / H:{H2} | F:{F2} / Deferred:{DF2} / Decision:{ND2} | {简要} | {closure2} |
+| 3 | B:{B3} / R:{R3} / N:{N3} | A:{A3} / D:{D3} / J:{J3} / H:{H3} | F:{F3} / Deferred:{DF3} / Decision:{ND3} | {简要} | {closure3} |
 
-1. **[finding id + 问题标题]** - [本质说明]
-   - **证据**: [原 reviewer evidence]
-   - **验证**: [checker 如何确认]
-   - **修复**: [小而精确的修复]
-   - **闭环**: [修复后通过的 verification to close]
+### 执行策略
 
-2. **[finding id + 问题标题]** - [本质说明]
-   - ...
+- Profile / mode: {profile} / {execution_mode}
+- Complexity budget: {complexity_budget}
+- Provenance rejected: {provenance_rejected}
+- Acceptance challenge: {challenge_status}
 
-### 当前代码状态
-- ✅ {测试数} 个测试全部通过
-- ✅ {commit数} 个 commit 完成代码质量改进
-- ✅ accepted blocking 已闭环
+### 已修复并闭环
 
-### 降级/驳回的问题类型
-- [列出 downgraded/rejected 的问题类别及原因]
+1. **[finding id + 问题标题]** — [被破坏的不变量]
+   - Evidence verdict: [accepted + 关键证据]
+   - Action reason: [为何属于 fix-now，而非仅事实成立]
+   - Minimal fix: [小而精确的修复]
+   - Closure: [verification + 适用 transition/consumer/failure rows]
+
+### Deferred / Needs Decision
+
+- [finding id] — [事实风险] — [为何不属于本轮修复或触发的 complexity signal]
+
+### Complexity delta
+
+- Production LOC: {production_loc_delta}
+- Test LOC: {test_loc_delta}
+- Runtime surfaces: services {services_delta} / ports {ports_delta} / tables {tables_delta}
+
+### 当前状态
+
+- Tests: {真实命令和结果}
+- Fixed findings: {fixed_count}
+- Deferred risks: {deferred_count}
+- Needs decision: {needs_decision_count}
+- Reviewed HEAD: {reviewed_head_sha}
+- Artifacts: {artifact_root}
