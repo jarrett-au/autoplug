@@ -3,6 +3,7 @@ name: pr-generator
 description: Analyze branch changes, generate a conventional PR title and concise description, then create the pull request by default. Pass `--draft` to generate recommendations only without creating a PR.
 model: sonnet
 user-invocable: true
+---
 
 # PR Generator
 
