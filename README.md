@@ -33,9 +33,9 @@ claude plugin install agent-evolve
 | 命令 | 用途 |
 |------|------|
 | `/code-simplifier [scope] [--dry-run]` | 精简近期改动：并行发现、串行修改、逐项验证行为不变 |
-| `/edd-review-loop {auto,low,medium,high}` | 风险分级 → change-unit 并行审查 → 证据审计 → 修复 → 增量复审 |
-| `/edd-reviewer` | 自主资深级代码审查，blocking 问题必须带可验证证据 |
-| `/edd-auditor` | 对 AI review finding 做证据审计，输出 accepted/downgraded/rejected |
+| `/edd-review-loop {auto,low,medium,high} {review-only,fix-critical,spec-compliance}` | 意图定界 → 风险分级审查 → 证伪审计 → 动作分类与复杂度闸门 → 修复 → 增量闭环 |
+| `/edd-reviewer` | 按 change unit 审查，blocking 必须带 Git provenance、稳定 fingerprint 和可证伪证据 |
+| `/edd-auditor` | 主动寻找反证，校准 finding 事实与严重性；不替 orchestrator 决定是否修复 |
 | `/write-tests` | 基于项目上下文编写高质量测试 |
 | `/spec-forge` | 将高层需求转化为详细的规格文档（迭代式） |
 | `/handoff` | 生成高信噪比交接文档，让下一轮 agent 无缝接手 |

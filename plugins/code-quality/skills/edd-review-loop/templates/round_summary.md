@@ -1,7 +1,11 @@
-## 第 {N} 轮循环完成
+## 第 {N} 轮完成
 
-- Review 发现: blocking {B} 个 / risks {R} 个 / nits {N} 个
-- Evidence audit: accepted {A} 个 / downgraded {D} 个 / rejected {J} 个
-- 实际修复: {简要描述}
-- 证据闭环: {verification_status}
-- 测试: {测试状态}
+- Profile / mode: {profile} / {execution_mode}
+- Review: blocking {B} / risks {R} / nits {N}
+- Provenance rejected: {P}
+- Audit: accepted {A} / downgraded {D} / rejected {J} / needs-human {H}
+- Acceptance challenge: {challenge_status}
+- Actions: fix-now {F} / deferred {DF} / needs-decision {ND}
+- Fixed: {简要描述}
+- Closure matrix: {closure_status}
+- Tests: {测试状态}
