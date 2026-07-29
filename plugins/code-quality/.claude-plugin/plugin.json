@@ -1,6 +1,6 @@
 {
   "name": "code-quality",
-  "version": "1.8.0",
+  "version": "1.8.1",
   "description": "代码质量工具集：行为保持型代码精简、意图感知的证据审查、复杂度治理、增量复审、测试、规格、交接与问题捕获",
   "author": {
     "name": "Jarrett",

@@ -3,7 +3,7 @@ name: explain-changes-and-verify
 description: 从功能/效果层面讲清一组变更（分支/PR/改动）做了什么、为达成什么效果，并给出按成本分层、可执行的端到端验证方案。
 when_to_use: 用户说"功能层面讲下这个分支/PR 做了哪些变动""解释这次改动""怎么端到端验证""how to verify""给个验证步骤"，或要求理解一段已完成的工作。
 allowed-tools: Bash(git log:*) Bash(git diff:*) Bash(git show:*) Bash(git branch:*) Bash(git status:*) Bash(git merge-base:*) Bash(sc worktree status:*) Read Grep Glob
-user-invocable: true
+disable-model-invocation: true
 ---
 
 # 解释变更并给出端到端验证
