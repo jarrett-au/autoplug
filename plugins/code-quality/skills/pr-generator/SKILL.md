@@ -1,7 +1,7 @@
 ---
 name: pr-generator
 description: Analyze branch changes, generate a conventional PR title and concise description, then create the pull request by default. Pass `--draft` to generate recommendations only without creating a PR.
-model: sonnet
+model: haiku
 user-invocable: true
 ---
 
@@ -208,21 +208,32 @@ git diff --stat main feature-branch
 
 After generating and checking the title and description:
 
-1. Check whether the source branch already has an open PR with `gh pr view <source_branch> --json url`.
-2. If one exists, **do not create a duplicate**. Report its URL and generated content; do not modify the existing PR unless the user explicitly requests an update.
-3. Otherwise, **create the PR by default**:
+1. Verify that the source names a local branch with `git show-ref --verify --quiet refs/heads/<source_branch>`. Stop if it does not; `gh pr create --head` requires a branch, not a detached `HEAD`, tag, or arbitrary commit.
+2. Check whether the source branch already has an open PR with `gh pr view <source_branch> --json url`.
+3. If one exists, **do not create a duplicate or push changes**. Report its URL and generated content; do not modify the existing PR unless the user explicitly requests an update.
+4. Otherwise, before creating the PR, check whether `origin` has the source branch:
+
+   ```bash
+   git ls-remote --exit-code --heads origin refs/heads/<source_branch>
+   ```
+
+   Exit status `2` means the branch is absent; publish it first with `git push -u origin <source_branch>`. Any other non-zero status is a remote/authentication failure: stop instead of treating it as a missing branch.
+5. If the remote branch exists, compare its SHA from `git ls-remote` with `git rev-parse refs/heads/<source_branch>`. If they differ, run `git push -u origin <source_branch>` before creating the PR. A rejected push is a divergence to resolve, not a reason to continue with stale remote commits.
+6. **Create the PR by default** only after the remote source branch matches the local branch:
 
    ```bash
    gh pr create --base <base_branch> --head <source_branch> --title "<title>" --body "<description>"
    ```
 
    Report the returned PR URL as the completed result.
-4. If the invocation contains `--draft`, **do not run `gh pr create`**. Output the generated title, description, and the exact command the user could run.
+7. If the invocation contains `--draft`, keep every operation read-only: **do not push or run `gh pr create`**. Output the generated title, description, and the exact commands in execution order, including `git push -u origin <source_branch>` when the remote branch is absent or stale.
 
 ### Quality Checklist
 
 Before creating a PR or returning a `--draft` recommendation:
 - [ ] No open PR already exists for the source branch
+- [ ] Source is a named local branch
+- [ ] Remote source branch state checked; it matches local before creation
 - [ ] Title uses conventional commit format
 - [ ] Title is concise (<72 chars)
 - [ ] Title capitalized correctly
