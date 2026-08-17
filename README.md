@@ -1,8 +1,10 @@
 # AutoPlug
 
-Claude Code 自动化能力插件集 — Coding Pipeline + Code Quality + Agent Evolution。
+Agent 自动化能力集 — Coding Pipeline + Code Quality + Agent Evolution。支持 Claude Code Plugin 与 Agent Skills CLI。
 
 ## 安装
+
+### Claude Code Plugin
 
 ```bash
 claude plugin marketplace add jarrett-au/autoplug
@@ -12,6 +14,23 @@ claude plugin install agent-evolve
 ```
 
 每个 plugin 可单独安装，按需选用。
+
+### Agent Skills CLI
+
+使用 [skills](https://github.com/vercel-labs/skills) 将单个 skill 安装到 Claude Code、Codex、Cursor、OpenCode 等 agent：
+
+```bash
+# 查看可安装的 skills
+npx skills add jarrett-au/autoplug --list
+
+# 安装指定 skill
+npx skills add jarrett-au/autoplug --skill code-simplifier
+
+# 全局安装到指定 agent
+npx skills add jarrett-au/autoplug --skill code-simplifier -g -a claude-code -y
+```
+
+`npx skills` 只安装 skill 及其目录内的支持文件。`auto-issue` 和 `auto-epic` 依赖 plugin 中的专用 agents，使用这两条完整 pipeline 时请通过 Claude Code Plugin 安装。
 
 ## Plugins
 
