@@ -1,4 +1,5 @@
 ---
+name: auto-epic
 description: 将大需求拆分为多个独立可执行的 GitHub Issues。分析 codebase → 输出拆分方案 → 用户确认 → 批量创建。
 argument-hint: <大需求描述>
 ---
