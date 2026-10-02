@@ -1,0 +1,6 @@
+interface:
+  display_name: "Diagnose"
+  short_description: "Investigate a scoped bug with symptom-sensitive evidence."
+  default_prompt: "Use $diagnose to investigate this failure and distinguish verified causes from uncertainty."
+policy:
+  allow_implicit_invocation: false

@@ -1,6 +1,6 @@
 # AutoPlug
 
-Agent 自动化能力集 — Coding Pipeline + Code Quality + Agent Evolution。支持 Claude Code Plugin 与 Agent Skills CLI。
+Agent 自动化能力集 — Coding Pipeline + Code Quality + Agent Evolution + Engineering Discipline。支持 Claude Code Plugin 与 Agent Skills CLI。
 
 ## 安装
 
@@ -73,6 +73,18 @@ npx skills add jarrett-au/autoplug --skill code-simplifier -g -a claude-code -y
 | `/skill-auto-discover` | 知识提炼：从对话中提取有价值的知识点，自动创建/更新 Skill/Agent/Hook/Plugin |
 
 核心闭环：**做事 → 自省（发现不足） → 固化（创建 Skill） → 下次更好**。
+
+### engineering-discipline — 实验性工程纪律
+
+独立的设计澄清、问题诊断与行为切片 TDD，不依赖旧版测试 Skill，不自动接管现有流水线。
+
+- `/engineering-discipline:grill-design`：澄清影响实现的决策，返回验收例子和明确边界。
+- `/engineering-discipline:diagnose`：用症状敏感的证据定位问题，在授权范围内修复。
+- `/engineering-discipline:tdd-slice`：按行为切片执行 red → green → refactor，并报告真实验证结果。
+
+三个按需原语：`domain-language`（含义）、`module-design`（边界）、`feedback-loop`（证据）。每个 Skill 可独立分发，无 Hook，不强制生成文档或加载同伴 Skill。
+
+本地试用与调用策略见 [插件说明](plugins/engineering-discipline/README.md)。行为效果通过 [小样本对照](plugins/engineering-discipline/evaluation/cases.md) 验证，打包校验不等于效果证明。
 
 ## 设计原则
 

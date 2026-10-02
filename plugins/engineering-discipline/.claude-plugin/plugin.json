@@ -1,0 +1,9 @@
+{
+  "name": "engineering-discipline",
+  "version": "0.1.0",
+  "description": "实验性工程纪律：设计决策澄清、证据驱动诊断与行为切片 TDD；独立使用，显式启用，不接管现有流水线",
+  "author": {
+    "name": "Jarrett",
+    "email": "zhongyu.ou@gmail.com"
+  }
+}
