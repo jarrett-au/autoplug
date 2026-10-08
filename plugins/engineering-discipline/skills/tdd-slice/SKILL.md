@@ -11,6 +11,18 @@ user-invocable: true
 
 Enter only when the user selects this workflow. Implement the agreed behavior, not an entire development pipeline. Work one behavior slice at a time; do not generate every test first and then all production code. This skill works alone and supplies its own testing rules.
 
+## Project records
+
+Before acting or resuming, follow project guidance and existing document maps to the relevant glossary (including a legacy `CONTEXT.md`), ADRs and task/spec. If no map exists, inspect root and affected-area documentation. Reconcile these with current code and evidence; surface conflicts instead of silently treating either as authoritative. Reuse existing files without renaming them or creating parallel records. Missing records are not a reason to scaffold empty documents.
+
+When task-related document writes are authorized, save settled knowledge as it emerges:
+
+- **Meaning:** update the existing glossary; otherwise use `GLOSSARY.md` in the relevant context. Record only confirmed, reusable domain definitions, not implementation or progress.
+- **Decision:** write a short ADR only when the choice is costly to reverse, surprising without context, and involves real alternatives. Follow existing naming; otherwise use the next unused `docs/adr/NNNN-slug.md`. State context, decision, rejected alternative and reason.
+- **Task:** for cross-stage/session work, maintain one existing issue/spec or task record; without one use `docs/tasks/<slug>.md`. Keep scope, acceptance criteria, linked glossary/ADRs, verified progress, blockers and next step. Do not duplicate long-term knowledge here.
+
+Separate observations, accepted decisions and hypotheses; preserve the source or confirming request. Mark replaced decisions as superseded and link successors rather than erasing history. Re-read targets before editing and preserve unrelated changes. In read-only/no-file mode, provide proposed edits and identify unsaved state. Obtain authorization for external tracker writes; otherwise return a proposed update, not a claim of synchronization. At handoff, give record paths and evidence locations, marking unverified work explicitly.
+
 ## 1. Choose the slice
 
 Read relevant guidance, callers, test conventions and accepted requirements. State the behavior as an observable example: input/context, action, expected result and meaningful side effects. Define what is out of scope.
@@ -43,6 +55,6 @@ For visual, performance or probabilistic behavior, define a comparison method, a
 
 ## Handoff
 
-Summarize behavior delivered, observed red and green (commands and outcomes), any refactor, neighboring checks and gaps. A brief response is sufficient; no default report, glossary or ADR. Use project conventions for necessary artifacts.
+Summarize behavior delivered, observed red and green (commands and outcomes), any refactor, neighboring checks and gaps. Update the active task record at each completed stage or pause, linking acceptance criteria to actual checks and remaining gaps. Persist newly settled reusable meanings and qualifying decisions under Project records. Do not write a report per test or copy raw logs into the glossary.
 
 Do not change agent instruction files/configuration, install broad tooling, affect external systems or expand task scope merely because this workflow is loaded.

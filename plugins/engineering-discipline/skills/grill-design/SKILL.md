@@ -11,6 +11,18 @@ user-invocable: true
 
 Enter only when the user selects this workflow. Clarify the requested design; do not start implementation, a full specification, or another workflow automatically. This skill works alone. Reading guidance does not expand permission to act.
 
+## Project records
+
+Before acting or resuming, follow project guidance and existing document maps to the relevant glossary (including a legacy `CONTEXT.md`), ADRs and task/spec. If no map exists, inspect root and affected-area documentation. Reconcile these with current code and evidence; surface conflicts instead of silently treating either as authoritative. Reuse existing files without renaming them or creating parallel records. Missing records are not a reason to scaffold empty documents.
+
+When task-related document writes are authorized, save settled knowledge as it emerges:
+
+- **Meaning:** update the existing glossary; otherwise use `GLOSSARY.md` in the relevant context. Record only confirmed, reusable domain definitions, not implementation or progress.
+- **Decision:** write a short ADR only when the choice is costly to reverse, surprising without context, and involves real alternatives. Follow existing naming; otherwise use the next unused `docs/adr/NNNN-slug.md`. State context, decision, rejected alternative and reason.
+- **Task:** for cross-stage/session work, maintain one existing issue/spec or task record; without one use `docs/tasks/<slug>.md`. Keep scope, acceptance criteria, linked glossary/ADRs, verified progress, blockers and next step. Do not duplicate long-term knowledge here.
+
+Separate observations, accepted decisions and hypotheses; preserve the source or confirming request. Mark replaced decisions as superseded and link successors rather than erasing history. Re-read targets before editing and preserve unrelated changes. In read-only/no-file mode, provide proposed edits and identify unsaved state. Obtain authorization for external tracker writes; otherwise return a proposed update, not a claim of synchronization. At handoff, give record paths and evidence locations, marking unverified work explicitly.
+
 ## Process
 
 1. **Read before asking.** Inspect the request, relevant project guidance, existing decisions, interfaces and callers. Use current documentation for version-sensitive external contracts. Resolve code questions with tools, not an interview. If documents conflict or are outdated, identify the conflict rather than silently choosing one.
@@ -25,7 +37,7 @@ Enter only when the user selects this workflow. Clarify the requested design; do
 - Infer ordinary, reversible implementation details from project conventions; label material assumptions. Ask about new product behavior, changed public contracts and hard-to-reverse choices.
 - Reuse accepted decisions from an existing requirements process. Do not repeat that process or automatically launch a specification or UI-design tool.
 - A hypothetical scenario is a probe, not an observed customer requirement. Keep it labeled until confirmed.
-- Do not create a glossary, ADR or report by default. Keep a short decision summary in the response. Update existing project documents only within the authorized scope; propose a new durable record only when reuse or a meaningful trade-off warrants it.
+- Persist confirmed reusable terms and qualifying decisions during clarification using Project records. For staged work, update the task record before handing off; a chat summary alone is insufficient unless writes are disallowed. Do not generate a full specification or a separate interview report.
 - Do not modify agent instruction files or runtime configuration to make these rules persistent.
 
 ## Handoff

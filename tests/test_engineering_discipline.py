@@ -91,6 +91,20 @@ class EngineeringDisciplinePackage(unittest.TestCase):
                 for forbidden in ("/home/", ".claude-plugins-data", "CLAUDE_PLUGIN_ROOT", "write-tests", "auto-issue", "autoplug"):
                     self.assertNotIn(forbidden, body)
 
+    def test_project_record_contract_is_available_standalone(self):
+        # Presence/consistency guard only; this does not test model compliance.
+        contracts = []
+        for name in sorted(NAMES):
+            with self.subTest(skill=name):
+                _, body = skill_parts(name)
+                self.assertIn("## Project records\n", body)
+                contract = body.split("## Project records\n", 1)[1].split("\n## ", 1)[0]
+                for marker in ("GLOSSARY.md", "CONTEXT.md", "docs/adr/", "docs/tasks/",
+                               "read-only", "superseded", "unverified", "external"):
+                    self.assertIn(marker, contract)
+                contracts.append(contract)
+        self.assertEqual(len(set(contracts)), 1, "Standalone record rules have drifted")
+
     def test_instruction_only_plugin(self):
         for directory in ("hooks", "commands", "scripts", "agents"):
             self.assertFalse((PLUGIN / directory).exists(), directory)

@@ -9,7 +9,19 @@ user-invocable: false
 
 ## Apply within the current task
 
-Use this reference only where meaning affects behavior or a decision. Return to the active workflow after resolving that uncertainty. It grants no additional permission to edit, rename, document or broaden the task, and requires no other skill.
+Use this reference only where meaning affects behavior or a decision. Return to the active workflow after resolving that uncertainty. It requires no other skill; maintain relevant records within existing document-write permission, without widening the task.
+
+## Project records
+
+Before acting or resuming, follow project guidance and existing document maps to the relevant glossary (including a legacy `CONTEXT.md`), ADRs and task/spec. If no map exists, inspect root and affected-area documentation. Reconcile these with current code and evidence; surface conflicts instead of silently treating either as authoritative. Reuse existing files without renaming them or creating parallel records. Missing records are not a reason to scaffold empty documents.
+
+When task-related document writes are authorized, save settled knowledge as it emerges:
+
+- **Meaning:** update the existing glossary; otherwise use `GLOSSARY.md` in the relevant context. Record only confirmed, reusable domain definitions, not implementation or progress.
+- **Decision:** write a short ADR only when the choice is costly to reverse, surprising without context, and involves real alternatives. Follow existing naming; otherwise use the next unused `docs/adr/NNNN-slug.md`. State context, decision, rejected alternative and reason.
+- **Task:** for cross-stage/session work, maintain one existing issue/spec or task record; without one use `docs/tasks/<slug>.md`. Keep scope, acceptance criteria, linked glossary/ADRs, verified progress, blockers and next step. Do not duplicate long-term knowledge here.
+
+Separate observations, accepted decisions and hypotheses; preserve the source or confirming request. Mark replaced decisions as superseded and link successors rather than erasing history. Re-read targets before editing and preserve unrelated changes. In read-only/no-file mode, provide proposed edits and identify unsaved state. Obtain authorization for external tracker writes; otherwise return a proposed update, not a claim of synchronization. At handoff, give record paths and evidence locations, marking unverified work explicitly.
 
 ## Resolve a term
 
@@ -30,10 +42,10 @@ Example: “cancel order” might mean stop unshipped items or refund everything
 
 ## Record proportionally
 
-- Keep a resolved term in the response when it is only needed for this task.
-- Reuse an existing glossary or decision record when the change is in scope. Do not create a new one by default or overwrite accepted definitions without surfacing the contradiction.
-- Propose a durable glossary entry only for meaning that is likely to recur across tasks. Record a design decision only when a real, consequential trade-off was made; include alternatives, rationale and remaining uncertainty.
-- Follow project document conventions. Do not impose a directory scheme, rename code across the repository, or modify agent instruction files/configuration to make the terminology persistent.
+- Persist a confirmed reusable term immediately under Project records, not only at session end. Keep task-only explanations in the task record or response.
+- Use a concise entry: term, definition, relevant context and confusing aliases to avoid. Include a distinguishing example when useful; never promote a hypothesis into the glossary.
+- Check existing definitions before updating; resolve contradictions with the decision owner. Do not rename legacy files or create a second glossary merely to match a preferred filename.
+- Keep architectural choices in ADRs and current work in task records. Do not rename unrelated code or modify agent instruction files/configuration.
 
 ## Exit
 
