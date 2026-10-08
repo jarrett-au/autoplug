@@ -1,0 +1,6 @@
+interface:
+  display_name: "Grill Design"
+  short_description: "Resolve consequential design decisions before coding."
+  default_prompt: "Use $grill-design to clarify the consequential decisions in this design before implementation."
+policy:
+  allow_implicit_invocation: false

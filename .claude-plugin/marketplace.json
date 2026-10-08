@@ -36,6 +36,16 @@
       },
       "source": "./plugins/code-quality",
       "category": "development"
+    },
+    {
+      "name": "engineering-discipline",
+      "description": "实验性工程纪律：设计澄清、证据诊断与切片 TDD；沉淀并复用领域含义、重要决策和任务状态，不接管现有流水线",
+      "author": {
+        "name": "Jarrett",
+        "email": "zhongyu.ou@gmail.com"
+      },
+      "source": "./plugins/engineering-discipline",
+      "category": "development"
     }
   ]
 }

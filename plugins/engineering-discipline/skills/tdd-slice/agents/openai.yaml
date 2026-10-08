@@ -1,0 +1,6 @@
+interface:
+  display_name: "TDD Slice"
+  short_description: "Implement one behavior slice with observed red and green."
+  default_prompt: "Use $tdd-slice to implement the requested behavior test-first and report actual verification."
+policy:
+  allow_implicit_invocation: false
