@@ -113,15 +113,14 @@ class EngineeringDisciplinePackage(unittest.TestCase):
             if path.is_file():
                 self.assertIn(path.suffix, {".md", ".json", ".yaml"})
 
-    def test_user_docs_and_evaluation_exist(self):
+    def test_user_docs_exist(self):
         root_readme = (ROOT / "README.md").read_text(encoding="utf-8")
         readme = (PLUGIN / "README.md").read_text(encoding="utf-8")
         for name in NAMES:
             self.assertIn(name, root_readme)
             self.assertIn(name, readme)
         self.assertIn("engineering-discipline", root_readme)
-        for name in ("cases.md", "result-template.md"):
-            self.assertTrue((PLUGIN / "evaluation" / name).is_file())
+
 
 
 if __name__ == "__main__":

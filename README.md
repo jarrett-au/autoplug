@@ -84,7 +84,7 @@ npx skills add jarrett-au/autoplug --skill code-simplifier -g -a claude-code -y
 
 三个按需原语：`domain-language`（含义）、`module-design`（边界）、`feedback-loop`（证据）。每个 Skill 可独立分发，无 Hook，不依赖同伴 Skill；在授权范围内按需维护词汇表、短 ADR 与任务记录，后续阶段先读取再执行。
 
-本地试用与调用策略见 [插件说明](plugins/engineering-discipline/README.md)。行为效果通过 [小样本对照](plugins/engineering-discipline/evaluation/cases.md) 验证，打包校验不等于效果证明。
+本地试用、调用策略与验证说明见 [插件说明](plugins/engineering-discipline/README.md)。打包校验不等于行为效果证明。
 
 ## 设计原则
 

@@ -65,7 +65,7 @@ Codex 用 `$tdd-slice` 等名称显式选择。每个目录携带 `agents/openai
 
 第一版保留少量规则重复，使单 Skill 安装仍然完整；原语提供更深入的判断方法，而非强制前置依赖。
 
-## 校验与试验
+## 维护与验证
 
 仓库根目录执行打包校验：
 
@@ -73,7 +73,7 @@ Codex 用 `$tdd-slice` 等名称显式选择。每个目录携带 `agents/openai
 uv run --with PyYAML==6.0.3 python -m unittest discover -s tests -v
 ```
 
-这些检查覆盖清单、YAML/JSON、调用策略、独立分发路径及文档入口，**不评估模型行为**。真实效果用 [小样本对照协议](evaluation/cases.md) 和 [结果模板](evaluation/result-template.md) 记录，不先建评测平台。
+这些检查覆盖清单、YAML/JSON、调用策略、独立分发路径及文档入口，**不评估模型行为**。实际试用时重点检查：是否减少歧义和返工、是否产生可信验证、跨会话是否正确读取记录，以及额外追问和文档成本是否值得。尚未完成行为效果对照试验，不将静态通过视为效果证明。
 
 ## 设计来源
 
