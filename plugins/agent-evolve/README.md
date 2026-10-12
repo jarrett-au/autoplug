@@ -4,6 +4,19 @@ Claude Code Agent 自动进化工具。
 
 ## Skills
 
+### behavior-to-context
+
+将用户对 Agent 行为的反馈提炼成简短、可复用的上下文规则。
+
+**触发：** `/agent-evolve:behavior-to-context`，或要求“把这个问题提炼成 agent 规则”。
+
+- 提取失败行为与期望行为，区分全局、项目和当前任务作用域。
+- 按目标 Agent 的官方文档核实位置与加载方式，不默认绑定某个运行时。
+- 输出推荐位置与可粘贴规则，检查是否误伤正常行为。
+- 默认只起草；明确授权后才定点修改已有上下文文件。
+
+可通过 `npx skills add jarrett-au/autoplug --skill behavior-to-context` 独立安装。静态检查与安装验证不代表模型行为效果已验证。
+
 ### self-critique-loop
 
 自省迭代循环——从目标受众/用户视角审视产出，诚实批判，反复改进直到 genuine aha moment。

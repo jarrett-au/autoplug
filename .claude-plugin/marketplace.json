@@ -19,7 +19,7 @@
     },
     {
       "name": "agent-evolve",
-      "description": "Agent 自动进化工具：自省迭代循环 + 跨会话模式挖掘(Surprise Me) + 知识提炼与自动创建",
+      "description": "Agent 自动进化工具：自省迭代、跨会话模式挖掘、知识提炼与行为反馈规则化",
       "author": {
         "name": "Jarrett",
         "email": "zhongyu.ou@gmail.com"
