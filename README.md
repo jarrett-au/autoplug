@@ -64,10 +64,11 @@ npx skills add jarrett-au/autoplug --skill code-simplifier -g -a claude-code -y
 
 ### agent-evolve — Agent 自动进化工具
 
-帮助 Claude Code agent 从经验中学习，持续变强。
+从经验与用户反馈中提炼可复用的知识和行为规则。
 
 | 命令 | 用途 |
 |------|------|
+| `/behavior-to-context` | 将行为反馈提炼为最小上下文规则，推荐作用域与位置，明确授权后才写入 |
 | `/self-critique-loop` | 自省迭代循环：从目标受众视角审视产出，迭代直到 genuine aha |
 | `/session-archaeologist` | 跨会话模式挖掘：从项目记忆和代码历史中发现隐藏模式（"surprise me"） |
 | `/skill-auto-discover` | 知识提炼：从对话中提取有价值的知识点，自动创建/更新 Skill/Agent/Hook/Plugin |
@@ -88,7 +89,7 @@ npx skills add jarrett-au/autoplug --skill code-simplifier -g -a claude-code -y
 
 ## 设计原则
 
-- **零侵入**：所有 plugin 不修改项目 CLAUDE.md、rules、settings.json
+- **零侵入**：所有 plugin 不擅自修改项目 CLAUDE.md、AGENTS.md、rules、settings.json
 - **Plan vs Auto**：决策点用 plan，评估点用 auto
 - **独立分发**：每个 plugin 可单独安装，不需要整个 marketplace
 
