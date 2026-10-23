@@ -15,9 +15,13 @@ Inspect only the design decision the active task needs. Do not initiate a full a
 
 Read the relevant project map, current contracts, accepted decisions and active task. Reuse their locations and authority rules; surface conflicts with code instead of silently choosing a source.
 
-Within existing write permission, maintain implemented responsibilities, interfaces and invariants in the owning architecture document, contract or README. Each fact has one home; link rather than duplicate it. Keep approved but unimplemented boundaries in the active task or a proposed ADR, not the current architecture.
+Within existing write permission, maintain implemented structure, ownership and invariants in the owning architecture document, and caller obligations in the owning contract. Each fact has one authority; link rather than duplicate it. Keep approved but unimplemented boundaries in the active task or a proposed ADR, not the current architecture.
 
-An ADR is warranted only when a choice is costly to reverse, surprising without context and involves real alternatives. Record context, decision and rationale using project naming and retention policy; do not require append-only history. Ordinary local choices need no document. Leave task progress and closure to the active workflow. In read-only mode, return proposed updates as unsaved; do not initiate tracker or agent-configuration changes.
+Reuse the project's locations first. Without a convention, start with an existing root README section; keep operations, checks and navigation there. When real content needs a separate home, suggest `docs/architecture/overview.md` for structure/ownership and `docs/architecture/client-contract.md` for callers. Split only for an independent stable reader need or update/ownership boundary, not length or a new feature name. Do not require scaffolding, indexes, templates or feature-specific API files.
+
+Actively record a genuine choice that is costly to reverse, surprising without context and has real alternatives in the project's ADR location (`docs/adr` absent a convention). Capture context, alternatives, decision and rationale, not chronology, invented historical approval or duplicated API specifics. Follow project naming and retention policy; do not target a record count or require an ADR for ordinary local choices.
+
+Update the owning current document in place, remove stale/redundant scope-owned text and repair affected links. Leave task progress and closure to the active workflow. In read-only mode, return proposed updates as unsaved; do not initiate tracker changes or modify agent instructions/configuration without explicit permission.
 
 ## Working terms
 
@@ -46,4 +50,4 @@ An ADR is warranted only when a choice is costly to reverse, surprising without 
 
 ## Exit
 
-Return the chosen boundary or recommendation, what knowledge it owns, compatibility implications and verification route. If no change is justified, say so. Update only the relevant knowledge described above; do not create a design report, diagram or second implementation as proof of work. Do not modify agent instruction files/configuration.
+Return the chosen boundary or recommendation, what knowledge it owns, compatibility implications and verification route. If no change is justified, say so. Update only the relevant knowledge described above; do not create a design report, diagram or second implementation as proof of work. Agent instruction/configuration changes require explicit permission.

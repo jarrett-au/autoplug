@@ -13,11 +13,11 @@ Use the smallest useful observation loop for the current claim. Do not initiate 
 
 ## Evidence ownership
 
-Read the relevant acceptance criteria, current contracts and available evidence. Check which revision and environment an observation covers; previous success is not proof about changed code.
+Read the relevant acceptance criteria, current contracts and available evidence first. Check which revision and environment an observation covers; previous success is not proof about changed code. Consult history only for a concrete question current state cannot answer.
 
-Default to a compact result in the response, not a new report. Persist evidence only when needed for a handoff, comparison, migration or audit. Use the project's evidence location and link it from the active task if one exists. Include the claim, revision, relevant inputs/environment, observed result, limits and retrievable artifacts; redact secrets. A disposable local path is not a durable handoff.
+Default to a compact result in the response, not a saved report, including for migrations and comparisons. Persist only for an explicit retention requirement or a concrete unresolved question/active handoff that needs an artifact. Reuse the project's location, not a separate evidence collection; state purpose, scope, revision, claim, relevant inputs/environment, observed result, limits and retrievable artifacts, redacting secrets. A disposable local path is not a durable handoff.
 
-Historical measurements remain historical; do not rewrite them to imply current success. Preserve irreplaceable migration/audit evidence under project retention policy. Current contracts hold verified invariants, not command output or dated run summaries. Leave glossary, architecture and task lifecycle management to their owners. In read-only mode, identify unsaved evidence instead of writing files; this reference grants no external-write permission.
+Historical measurements remain historical; do not rewrite them to imply current success. Preserve unrelated user work, raw data, backups, images and explicitly required audit artifacts; follow explicit retention policy rather than automatically archiving every report. Current contracts hold verified invariants and reusable verification guidance, not command output or dated run summaries. Leave glossary, architecture and task lifecycle management to their owners. In read-only mode, identify unsaved evidence instead of writing files; this reference grants no external-write permission.
 
 ## Build the loop
 
@@ -39,7 +39,7 @@ Prefer fast automated feedback where it is representative. Do not reject useful 
 
 ## Bound cost and authority
 
-Use an effort budget appropriate to the task. Stop or ask when further probing adds little information, requires missing access or would consume unapproved resources. Do not run destructive probes, production replays, paid evaluations or external mutations without authorization. Do not modify agent instruction files/configuration to persist this guidance.
+Use an effort budget appropriate to the task. Stop or ask when further probing adds little information, requires missing access or would consume unapproved resources. Do not run destructive probes, production replays, paid evaluations or external mutations without authorization. Persisting guidance in agent instruction files/configuration requires explicit permission.
 
 ## Exit
 
