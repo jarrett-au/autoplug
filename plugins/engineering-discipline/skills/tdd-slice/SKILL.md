@@ -9,19 +9,19 @@ user-invocable: true
 
 ## Scope
 
-Enter only when the user selects this workflow. Implement the agreed behavior, not an entire development pipeline. Work one behavior slice at a time; do not generate every test first and then all production code. This skill works alone and supplies its own testing rules.
+Enter only when the user selects test-first implementation. This is not the default entry point for every feature, UI change or refactor. Work one behavior slice at a time, not all tests followed by all production code. Slices organize execution; they do not shrink the user's authorized outcome. This skill works alone.
 
-## Project records
+## Project knowledge and active work
 
-Before acting or resuming, follow project guidance and existing document maps to the relevant glossary (including a legacy `CONTEXT.md`), ADRs and task/spec. If no map exists, inspect root and affected-area documentation. Reconcile these with current code and evidence; surface conflicts instead of silently treating either as authoritative. Reuse existing files without renaming them or creating parallel records. Missing records are not a reason to scaffold empty documents.
+Read relevant code, project guidance and the document map. Reuse existing authorities and locations; missing optional records require neither setup nor empty files.
 
-When task-related document writes are authorized, save settled knowledge as it emerges:
+- **Current behavior:** update the owning contract, architecture document or README in place. Give each fact one home; link rather than duplicate it. Approved but unimplemented behavior belongs in a task or proposed decision, not current documentation.
+- **Terms and decisions:** save reusable meanings in the existing glossary (`CONTEXT.md` is valid; otherwise `GLOSSARY.md`). Write an ADR only for a costly-to-reverse, surprising choice with real alternatives. Follow project naming and retention policy, not mandatory append-only history.
+- **Active work:** use one task per bounded change needing a handoff. Reuse the tracker; otherwise use `.scratch/<slug>.md` when needed. Maintain current scope, acceptance, confirmed choices and sources, open questions, verification gaps and next action. Replace stale status, not append session summaries. New work does not extend completed tasks.
+- **Completion:** update long-term knowledge and links, retain necessary evidence, then close or remove temporary records under project policy. Without one, leave a compact closed task linking lasting outcomes. Preserve unrelated work, required audit records and irreplaceable evidence. Version control retains committed execution history.
+- **Evidence:** routine checks belong in the response. Persist only for handoff, comparison, migration or audit, with revision, environment, result and limits. Historical evidence is separate from current contracts.
 
-- **Meaning:** update the existing glossary; otherwise use `GLOSSARY.md` in the relevant context. Record only confirmed, reusable domain definitions, not implementation or progress.
-- **Decision:** write a short ADR only when the choice is costly to reverse, surprising without context, and involves real alternatives. Follow existing naming; otherwise use the next unused `docs/adr/NNNN-slug.md`. State context, decision, rejected alternative and reason.
-- **Task:** for cross-stage/session work, maintain one existing issue/spec or task record; without one use `docs/tasks/<slug>.md`. Keep scope, acceptance criteria, linked glossary/ADRs, verified progress, blockers and next step. Do not duplicate long-term knowledge here.
-
-Separate observations, accepted decisions and hypotheses; preserve the source or confirming request. Mark replaced decisions as superseded and link successors rather than erasing history. Re-read targets before editing and preserve unrelated changes. In read-only/no-file mode, provide proposed edits and identify unsaved state. Obtain authorization for external tracker writes; otherwise return a proposed update, not a claim of synchronization. At handoff, give record paths and evidence locations, marking unverified work explicitly.
+Respect document-write permission; in read-only mode identify proposed updates as unsaved. Re-read before editing. Distinguish facts, accepted decisions and hypotheses. External writes require authorization; do not initiate agent-configuration changes.
 
 ## 1. Choose the slice
 
@@ -29,7 +29,7 @@ Read relevant guidance, callers, test conventions and accepted requirements. Sta
 
 Use an existing supported interface when it exposes the behavior. No user approval is needed merely to select an ordinary test boundary. Ask only when new product behavior, a public-contract change or a hard-to-reverse decision is unresolved. A test must not silently decide such a question.
 
-If the request covers several slices, identify the next one and finish it before selecting another within the authorized scope. Do not impose one test, one method or one file as a quota.
+For a multi-slice request, finish each slice before the next and continue through the already-authorized scope without asking permission at every boundary. Stop only at completion, an explicit user boundary or a material blocker. No one-test, one-method or one-file quota.
 
 ## 2. Establish meaningful red
 
@@ -47,7 +47,7 @@ Once green, simplify touched code when there is a concrete benefit, preserving t
 
 ## 4. Verify and stop
 
-Run relevant neighboring tests, type/build checks or integration checks according to the change's risk. Inspect the diff. Stop when the slice meets its acceptance behavior, relevant checks pass and remaining verification limits are stated. Start another slice only if it is already in scope.
+Run relevant neighboring tests, type/build or integration checks according to risk. Inspect the diff. A slice is complete when its acceptance behavior passes and verification limits are stated; continue if more authorized work remains.
 
 If execution is unavailable, report the exact blocker and leave the status unverified. Do not claim a red-green cycle from tests you wrote but never ran. If a pure refactor already has adequate passing coverage, use that baseline and label it behavior-preservation work rather than inventing red.
 
@@ -55,6 +55,6 @@ For visual, performance or probabilistic behavior, define a comparison method, a
 
 ## Handoff
 
-Summarize behavior delivered, observed red and green (commands and outcomes), any refactor, neighboring checks and gaps. Update the active task record at each completed stage or pause, linking acceptance criteria to actual checks and remaining gaps. Persist newly settled reusable meanings and qualifying decisions under Project records. Do not write a report per test or copy raw logs into the glossary.
+Summarize delivered behavior, observed red and green, relevant checks and gaps. At a pause, refresh an existing task's current state and next action. At completion, update current knowledge and close the task as above. A small change with no durable knowledge change or handoff needs no new document; never write a report per test.
 
 Do not change agent instruction files/configuration, install broad tooling, affect external systems or expand task scope merely because this workflow is loaded.

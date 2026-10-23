@@ -11,17 +11,13 @@ user-invocable: false
 
 Use this reference only where meaning affects behavior or a decision. Return to the active workflow after resolving that uncertainty. It requires no other skill; maintain relevant records within existing document-write permission, without widening the task.
 
-## Project records
+## Knowledge ownership
 
-Before acting or resuming, follow project guidance and existing document maps to the relevant glossary (including a legacy `CONTEXT.md`), ADRs and task/spec. If no map exists, inspect root and affected-area documentation. Reconcile these with current code and evidence; surface conflicts instead of silently treating either as authoritative. Reuse existing files without renaming them or creating parallel records. Missing records are not a reason to scaffold empty documents.
+Follow the project's document map to the relevant glossary (`CONTEXT.md` is valid), current contracts, decisions and active task. Reconcile conflicts with code and accepted requirements. Do not create a second glossary or rename files.
 
-When task-related document writes are authorized, save settled knowledge as it emerges:
+Own vocabulary, not the whole task lifecycle. Within existing write permission, update confirmed reusable definitions in place; absent a glossary, use `GLOSSARY.md` only when there is a real definition to save. Link state machines and contracts instead of copying them. Keep implementation details, progress and conversation history out. A proposed or approved future concept must not imply that it is implemented.
 
-- **Meaning:** update the existing glossary; otherwise use `GLOSSARY.md` in the relevant context. Record only confirmed, reusable domain definitions, not implementation or progress.
-- **Decision:** write a short ADR only when the choice is costly to reverse, surprising without context, and involves real alternatives. Follow existing naming; otherwise use the next unused `docs/adr/NNNN-slug.md`. State context, decision, rejected alternative and reason.
-- **Task:** for cross-stage/session work, maintain one existing issue/spec or task record; without one use `docs/tasks/<slug>.md`. Keep scope, acceptance criteria, linked glossary/ADRs, verified progress, blockers and next step. Do not duplicate long-term knowledge here.
-
-Separate observations, accepted decisions and hypotheses; preserve the source or confirming request. Mark replaced decisions as superseded and link successors rather than erasing history. Re-read targets before editing and preserve unrelated changes. In read-only/no-file mode, provide proposed edits and identify unsaved state. Obtain authorization for external tracker writes; otherwise return a proposed update, not a claim of synchronization. At handoff, give record paths and evidence locations, marking unverified work explicitly.
+Leave task progress and closure to the active workflow. In read-only mode, propose the definition and mark it unsaved. Do not initiate tracker, agent-configuration or unrelated documentation changes.
 
 ## Resolve a term
 
@@ -42,10 +38,10 @@ Example: “cancel order” might mean stop unshipped items or refund everything
 
 ## Record proportionally
 
-- Persist a confirmed reusable term immediately under Project records, not only at session end. Keep task-only explanations in the task record or response.
+- Save a confirmed reusable term when it settles, not a transcript of how it was discussed. Task-local explanations belong in the response or existing active task.
 - Use a concise entry: term, definition, relevant context and confusing aliases to avoid. Include a distinguishing example when useful; never promote a hypothesis into the glossary.
-- Check existing definitions before updating; resolve contradictions with the decision owner. Do not rename legacy files or create a second glossary merely to match a preferred filename.
-- Keep architectural choices in ADRs and current work in task records. Do not rename unrelated code or modify agent instruction files/configuration.
+- Re-read definitions before editing and resolve contradictions with the decision owner. Follow the project's retention policy rather than appending superseded definitions.
+- Architectural rationale belongs in a qualifying ADR; current behavior belongs in its contract. Link those authorities when needed, without creating them merely to complete a template. Do not rename unrelated code or modify agent instruction files/configuration.
 
 ## Exit
 

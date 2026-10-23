@@ -11,17 +11,17 @@ user-invocable: true
 
 Enter only when the user selects this workflow. Clarify the requested design; do not start implementation, a full specification, or another workflow automatically. This skill works alone. Reading guidance does not expand permission to act.
 
-## Project records
+## Project knowledge and active work
 
-Before acting or resuming, follow project guidance and existing document maps to the relevant glossary (including a legacy `CONTEXT.md`), ADRs and task/spec. If no map exists, inspect root and affected-area documentation. Reconcile these with current code and evidence; surface conflicts instead of silently treating either as authoritative. Reuse existing files without renaming them or creating parallel records. Missing records are not a reason to scaffold empty documents.
+Read relevant code, project guidance and the document map. Reuse existing authorities and locations; missing optional records require neither setup nor empty files.
 
-When task-related document writes are authorized, save settled knowledge as it emerges:
+- **Current behavior:** update the owning contract, architecture document or README in place. Give each fact one home; link rather than duplicate it. Approved but unimplemented behavior belongs in a task or proposed decision, not current documentation.
+- **Terms and decisions:** save reusable meanings in the existing glossary (`CONTEXT.md` is valid; otherwise `GLOSSARY.md`). Write an ADR only for a costly-to-reverse, surprising choice with real alternatives. Follow project naming and retention policy, not mandatory append-only history.
+- **Active work:** use one task per bounded change needing a handoff. Reuse the tracker; otherwise use `.scratch/<slug>.md` when needed. Maintain current scope, acceptance, confirmed choices and sources, open questions, verification gaps and next action. Replace stale status, not append session summaries. New work does not extend completed tasks.
+- **Completion:** update long-term knowledge and links, retain necessary evidence, then close or remove temporary records under project policy. Without one, leave a compact closed task linking lasting outcomes. Preserve unrelated work, required audit records and irreplaceable evidence. Version control retains committed execution history.
+- **Evidence:** routine checks belong in the response. Persist only for handoff, comparison, migration or audit, with revision, environment, result and limits. Historical evidence is separate from current contracts.
 
-- **Meaning:** update the existing glossary; otherwise use `GLOSSARY.md` in the relevant context. Record only confirmed, reusable domain definitions, not implementation or progress.
-- **Decision:** write a short ADR only when the choice is costly to reverse, surprising without context, and involves real alternatives. Follow existing naming; otherwise use the next unused `docs/adr/NNNN-slug.md`. State context, decision, rejected alternative and reason.
-- **Task:** for cross-stage/session work, maintain one existing issue/spec or task record; without one use `docs/tasks/<slug>.md`. Keep scope, acceptance criteria, linked glossary/ADRs, verified progress, blockers and next step. Do not duplicate long-term knowledge here.
-
-Separate observations, accepted decisions and hypotheses; preserve the source or confirming request. Mark replaced decisions as superseded and link successors rather than erasing history. Re-read targets before editing and preserve unrelated changes. In read-only/no-file mode, provide proposed edits and identify unsaved state. Obtain authorization for external tracker writes; otherwise return a proposed update, not a claim of synchronization. At handoff, give record paths and evidence locations, marking unverified work explicitly.
+Respect document-write permission; in read-only mode identify proposed updates as unsaved. Re-read before editing. Distinguish facts, accepted decisions and hypotheses. External writes require authorization; do not initiate agent-configuration changes.
 
 ## Process
 
@@ -37,7 +37,7 @@ Separate observations, accepted decisions and hypotheses; preserve the source or
 - Infer ordinary, reversible implementation details from project conventions; label material assumptions. Ask about new product behavior, changed public contracts and hard-to-reverse choices.
 - Reuse accepted decisions from an existing requirements process. Do not repeat that process or automatically launch a specification or UI-design tool.
 - A hypothetical scenario is a probe, not an observed customer requirement. Keep it labeled until confirmed.
-- Persist confirmed reusable terms and qualifying decisions during clarification using Project records. For staged work, update the task record before handing off; a chat summary alone is insufficient unless writes are disallowed. Do not generate a full specification or a separate interview report.
+- Save settled reusable knowledge in its owning document. For a cross-session design, refresh the active task into a resumable snapshot, linking current contracts instead of repeating them. Keep target behavior and unverified acceptance examples explicit. Do not create an interview transcript or a report per round.
 - Do not modify agent instruction files or runtime configuration to make these rules persistent.
 
 ## Handoff

@@ -11,17 +11,13 @@ user-invocable: false
 
 Inspect only the design decision the active task needs. Do not initiate a full architecture scan, refactor or implementation without authorization. This reference works alone; its vocabulary describes concepts, not mandatory project names.
 
-## Project records
+## Knowledge ownership
 
-Before acting or resuming, follow project guidance and existing document maps to the relevant glossary (including a legacy `CONTEXT.md`), ADRs and task/spec. If no map exists, inspect root and affected-area documentation. Reconcile these with current code and evidence; surface conflicts instead of silently treating either as authoritative. Reuse existing files without renaming them or creating parallel records. Missing records are not a reason to scaffold empty documents.
+Read the relevant project map, current contracts, accepted decisions and active task. Reuse their locations and authority rules; surface conflicts with code instead of silently choosing a source.
 
-When task-related document writes are authorized, save settled knowledge as it emerges:
+Within existing write permission, maintain implemented responsibilities, interfaces and invariants in the owning architecture document, contract or README. Each fact has one home; link rather than duplicate it. Keep approved but unimplemented boundaries in the active task or a proposed ADR, not the current architecture.
 
-- **Meaning:** update the existing glossary; otherwise use `GLOSSARY.md` in the relevant context. Record only confirmed, reusable domain definitions, not implementation or progress.
-- **Decision:** write a short ADR only when the choice is costly to reverse, surprising without context, and involves real alternatives. Follow existing naming; otherwise use the next unused `docs/adr/NNNN-slug.md`. State context, decision, rejected alternative and reason.
-- **Task:** for cross-stage/session work, maintain one existing issue/spec or task record; without one use `docs/tasks/<slug>.md`. Keep scope, acceptance criteria, linked glossary/ADRs, verified progress, blockers and next step. Do not duplicate long-term knowledge here.
-
-Separate observations, accepted decisions and hypotheses; preserve the source or confirming request. Mark replaced decisions as superseded and link successors rather than erasing history. Re-read targets before editing and preserve unrelated changes. In read-only/no-file mode, provide proposed edits and identify unsaved state. Obtain authorization for external tracker writes; otherwise return a proposed update, not a claim of synchronization. At handoff, give record paths and evidence locations, marking unverified work explicitly.
+An ADR is warranted only when a choice is costly to reverse, surprising without context and involves real alternatives. Record context, decision and rationale using project naming and retention policy; do not require append-only history. Ordinary local choices need no document. Leave task progress and closure to the active workflow. In read-only mode, return proposed updates as unsaved; do not initiate tracker or agent-configuration changes.
 
 ## Working terms
 
@@ -50,4 +46,4 @@ Separate observations, accepted decisions and hypotheses; preserve the source or
 
 ## Exit
 
-Return the chosen boundary or recommendation, what knowledge it owns, its compatibility implications and verification route. If no change is justified, say so. Persist an accepted boundary decision that meets the ADR criteria under Project records; retain alternatives and rationale. Link it from the active task. Ordinary local choices need no ADR, diagram or second implementation. Do not modify agent instruction files/configuration.
+Return the chosen boundary or recommendation, what knowledge it owns, compatibility implications and verification route. If no change is justified, say so. Update only the relevant knowledge described above; do not create a design report, diagram or second implementation as proof of work. Do not modify agent instruction files/configuration.
