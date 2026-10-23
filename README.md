@@ -83,7 +83,7 @@ npx skills add jarrett-au/autoplug --skill code-simplifier -g -a claude-code -y
 - `/engineering-discipline:diagnose`：用症状敏感的证据定位问题，在授权范围内修复。
 - `/engineering-discipline:tdd-slice`：显式选择 test-first 时，按行为切片完成已授权范围并报告真实验证结果。
 
-三个按需原语：`domain-language`（含义）、`module-design`（边界）、`feedback-loop`（证据）。每个 Skill 可独立分发，无 Hook，不依赖同伴 Skill；在授权内维护当前知识，任务保留可恢复的当前快照、完成后收敛，专项证据按需留存。普通开发任务不必先选择 Skill。
+三个按需原语：`domain-language`（含义）、`module-design`（边界）、`feedback-loop`（证据）。每个 Skill 可独立分发，无 Hook，不依赖同伴 Skill；文档按稳定职责组织、当前知识原位维护、本地任务完成后收尾，验证默认在交付中报告而非积累日志。普通开发任务不必先选择 Skill。
 
 本地试用、调用策略与验证说明见 [插件说明](plugins/engineering-discipline/README.md)。打包校验不等于行为效果证明。
 

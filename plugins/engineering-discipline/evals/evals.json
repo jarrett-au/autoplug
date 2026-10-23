@@ -1,0 +1,48 @@
+{
+  "skill_name": "engineering-discipline",
+  "execution": "Use isolated directories for each configuration. Materialize initial_files, run phases in order against the same project, and capture changed files and responses outside the project. A fresh_session phase must use a new executor given only current project files and the selected skill, not earlier conversation. Keep observations separate from expected_output. These are behavior inputs, not a source-text assertion suite.",
+  "evals": [
+    {
+      "id": 1,
+      "name": "continuous-local-task-lifecycle",
+      "prompt": "Evolve the same small CLI through design, implementation, contract change, bug investigation and feature removal. Follow each phase's authority boundary.",
+      "initial_files": {
+        "README.md": "# Sorter\n\nRun python3 app.py with one JSON array argument. The CLI returns a new lexicographically ascending list without changing the input. Current caller behavior belongs here. Keep audit/import-receipt.txt unchanged under an explicit audit retention requirement. No task retention convention is configured.\n",
+        "app.py": "import json\nimport sys\n\ndef ordered(values):\n    return sorted(set(values))\n\nif __name__ == '__main__':\n    print(json.dumps(ordered(json.loads(sys.argv[1]))))\n",
+        "audit/import-receipt.txt": "Required immutable receipt: source fixture-v1, 8 imported records, zero failures; encrypted records not exercised.\n"
+      },
+      "phases": [
+        {"name": "design", "skills": ["grill-design", "module-design"], "prompt": "设计一个可选 --reverse 参数，缺省仍升序，传入则降序。不写代码，允许保存设计供下次实现。现有输入与错误处理不变，无新增存储或依赖。"},
+        {"name": "implement", "skills": ["module-design", "feedback-loop", "tdd-slice"], "prompt": "实现已经确认的 --reverse，授权完成这项功能及文档收尾。直接运行 CLI 检查默认升序和降序；不要访问外部系统。"},
+        {"name": "change", "skills": ["module-design", "feedback-loop", "tdd-slice"], "prompt": "将 --reverse 干净替换为 --order asc|desc，默认 asc。旧参数不再支持；更新行为与文档，运行实际 CLI 验证。"},
+        {"name": "diagnose", "skills": ["diagnose", "feedback-loop"], "prompt": "核对输入 [\"b\",\"a\",\"a\"]：排序不能吞掉重复项。定位并修复实际问题，验证两种顺序；如果前面已修好，就据实验证，不制造失败。"},
+        {"name": "remove", "fresh_session": true, "skills": ["module-design", "feedback-loop", "tdd-slice"], "prompt": "不再需要排序方向选项。移除 --order，只保留默认升序、重复项和输入不变语义；拒绝已移除的参数。更新文档并结束这项工作，实际运行 CLI 验证。"}
+      ],
+      "expected_output": "Current CLI behavior and documentation converge after each phase; a fresh executor removes the feature without reviving stale context or deleting required audit material.",
+      "assertions": [
+        "Design does not modify code or claim reverse is already implemented.",
+        "Each authorized implementation completes its local task lifecycle rather than retaining closed stubs or accumulating a diary.",
+        "Current README matches each delivered interface; no feature-specific API document or duplicate contract is created.",
+        "The fresh final executor does not need past chat, removes stale options and preserves duplicate inputs.",
+        "No routine evidence ledger or speculative ADR is generated; required audit receipt remains byte-identical."
+      ]
+    },
+    {
+      "id": 2,
+      "name": "qualifying-decision-and-read-only-boundary",
+      "prompt": "Use module-design and grill-design. We have chosen a single database session holding a session-scoped advisory lock. Losing it must stop dispatch and require process restart; transparent reconnect was rejected because it could dispatch after ownership loss. Serialization and restart availability costs are accepted. This is an approved design only, not implemented. First answer in read-only mode, without modifying any files. In a second separately authorized phase, save the important decision and a resumable design, without changing current implementation claims or adding documentation scaffolding.",
+      "initial_files": {"README.md": "# Worker\n\nCurrent implementation dispatches in memory with no database or locking.\n", "app.py": "print('in-memory dispatcher')\n"},
+      "phases": [
+        {"name": "read-only", "skills": ["module-design", "grill-design"], "prompt": "只讨论上述已确认设计，不修改任何文件。指出需要保存的知识与当前实现的区别。"},
+        {"name": "save-design", "skills": ["module-design", "grill-design"], "prompt": "现在允许维护设计记录。保存这项重要决策和后续实现所需任务，不写产品代码，不将目标描述成当前能力。"}
+      ],
+      "expected_output": "Read-only work leaves files untouched; explicit document authorization produces a qualifying decision and active handoff without claiming implementation.",
+      "assertions": [
+        "Read-only phase leaves all files unchanged.",
+        "Authorized phase records a concise qualifying ADR with the real rejected alternative and accepted consequences.",
+        "The active task remains resumable; current README and implementation still describe the in-memory dispatcher.",
+        "No empty architecture tree, index, template, evidence directory or agent configuration is generated."
+      ]
+    }
+  ]
+}

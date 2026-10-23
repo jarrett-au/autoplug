@@ -39,7 +39,7 @@
     },
     {
       "name": "engineering-discipline",
-      "description": "实验性工程纪律：设计澄清、证据诊断与切片 TDD；维护当前知识、收敛活跃任务、按需留存证据，不接管现有流水线",
+      "description": "实验性工程纪律：设计澄清、证据诊断与切片 TDD；维护当前知识、按职责组织文档、完成任务后收尾，不积累执行日志",
       "author": {
         "name": "Jarrett",
         "email": "zhongyu.ou@gmail.com"

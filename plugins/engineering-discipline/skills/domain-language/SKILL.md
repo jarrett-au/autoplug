@@ -15,7 +15,7 @@ Use this reference only where meaning affects behavior or a decision. Return to 
 
 Follow the project's document map to the relevant glossary (`CONTEXT.md` is valid), current contracts, decisions and active task. Reconcile conflicts with code and accepted requirements. Do not create a second glossary or rename files.
 
-Own vocabulary, not the whole task lifecycle. Within existing write permission, update confirmed reusable definitions in place; absent a glossary, use `GLOSSARY.md` only when there is a real definition to save. Link state machines and contracts instead of copying them. Keep implementation details, progress and conversation history out. A proposed or approved future concept must not imply that it is implemented.
+Own vocabulary, not API documentation or the whole task lifecycle. Within existing write permission, update confirmed reusable definitions in place; absent a glossary, use `GLOSSARY.md` only when there is a real definition to save. Link state machines and caller contracts instead of accumulating their details. Keep implementation details, progress and conversation history out. A proposed or approved future concept must not imply that it is implemented.
 
 Leave task progress and closure to the active workflow. In read-only mode, propose the definition and mark it unsaved. Do not initiate tracker, agent-configuration or unrelated documentation changes.
 
@@ -40,8 +40,8 @@ Example: “cancel order” might mean stop unshipped items or refund everything
 
 - Save a confirmed reusable term when it settles, not a transcript of how it was discussed. Task-local explanations belong in the response or existing active task.
 - Use a concise entry: term, definition, relevant context and confusing aliases to avoid. Include a distinguishing example when useful; never promote a hypothesis into the glossary.
-- Re-read definitions before editing and resolve contradictions with the decision owner. Follow the project's retention policy rather than appending superseded definitions.
-- Architectural rationale belongs in a qualifying ADR; current behavior belongs in its contract. Link those authorities when needed, without creating them merely to complete a template. Do not rename unrelated code or modify agent instruction files/configuration.
+- Re-read definitions before editing. Replace stale or redundant scope-owned wording in place, resolve contradictions with the decision owner and repair affected links; follow explicit project retention policy rather than appending superseded definitions.
+- Architectural rationale belongs in a qualifying ADR; current behavior belongs in its owning contract. Link those authorities when needed, without creating files merely to complete a template. Maintain knowledge needed for the next correct action, not the work history. Do not rename unrelated code or modify agent instruction files/configuration without explicit permission.
 
 ## Exit
 
