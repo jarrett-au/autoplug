@@ -11,17 +11,13 @@ user-invocable: false
 
 Use the smallest useful observation loop for the current claim. Do not initiate another workflow, expand edit permissions or build a test platform by default. This reference works alone.
 
-## Project records
+## Evidence ownership
 
-Before acting or resuming, follow project guidance and existing document maps to the relevant glossary (including a legacy `CONTEXT.md`), ADRs and task/spec. If no map exists, inspect root and affected-area documentation. Reconcile these with current code and evidence; surface conflicts instead of silently treating either as authoritative. Reuse existing files without renaming them or creating parallel records. Missing records are not a reason to scaffold empty documents.
+Read the relevant acceptance criteria, current contracts and available evidence. Check which revision and environment an observation covers; previous success is not proof about changed code.
 
-When task-related document writes are authorized, save settled knowledge as it emerges:
+Default to a compact result in the response, not a new report. Persist evidence only when needed for a handoff, comparison, migration or audit. Use the project's evidence location and link it from the active task if one exists. Include the claim, revision, relevant inputs/environment, observed result, limits and retrievable artifacts; redact secrets. A disposable local path is not a durable handoff.
 
-- **Meaning:** update the existing glossary; otherwise use `GLOSSARY.md` in the relevant context. Record only confirmed, reusable domain definitions, not implementation or progress.
-- **Decision:** write a short ADR only when the choice is costly to reverse, surprising without context, and involves real alternatives. Follow existing naming; otherwise use the next unused `docs/adr/NNNN-slug.md`. State context, decision, rejected alternative and reason.
-- **Task:** for cross-stage/session work, maintain one existing issue/spec or task record; without one use `docs/tasks/<slug>.md`. Keep scope, acceptance criteria, linked glossary/ADRs, verified progress, blockers and next step. Do not duplicate long-term knowledge here.
-
-Separate observations, accepted decisions and hypotheses; preserve the source or confirming request. Mark replaced decisions as superseded and link successors rather than erasing history. Re-read targets before editing and preserve unrelated changes. In read-only/no-file mode, provide proposed edits and identify unsaved state. Obtain authorization for external tracker writes; otherwise return a proposed update, not a claim of synchronization. At handoff, give record paths and evidence locations, marking unverified work explicitly.
+Historical measurements remain historical; do not rewrite them to imply current success. Preserve irreplaceable migration/audit evidence under project retention policy. Current contracts hold verified invariants, not command output or dated run summaries. Leave glossary, architecture and task lifecycle management to their owners. In read-only mode, identify unsaved evidence instead of writing files; this reference grants no external-write permission.
 
 ## Build the loop
 
@@ -47,4 +43,4 @@ Use an effort budget appropriate to the task. Stop or ask when further probing a
 
 ## Exit
 
-Return a compact claim → observation → conclusion, with real commands/results and remaining gaps. For staged work, link reusable evidence from the active task record with inputs, environment and actual outcome; keep raw logs separate and redact secrets. Use durable project locations rather than disposable paths for evidence needed after handoff. Re-check evidence against the current revision when resuming. Do not create a report merely to fill a template or claim behavioral improvement from packaging checks.
+Return a compact claim → observation → conclusion, with real commands/results and remaining gaps. Link existing durable evidence when useful rather than duplicating it. State unavailable artifacts or checks explicitly. Do not create a report per run or claim behavioral improvement from packaging checks.

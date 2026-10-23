@@ -11,17 +11,17 @@ user-invocable: true
 
 Enter only when selected by the user. Diagnose the stated failure; implement a fix only if the request authorizes fixing it. Do not expand into an architecture rewrite or repository-wide review. This skill works alone; no companion workflow is required.
 
-## Project records
+## Project knowledge and active work
 
-Before acting or resuming, follow project guidance and existing document maps to the relevant glossary (including a legacy `CONTEXT.md`), ADRs and task/spec. If no map exists, inspect root and affected-area documentation. Reconcile these with current code and evidence; surface conflicts instead of silently treating either as authoritative. Reuse existing files without renaming them or creating parallel records. Missing records are not a reason to scaffold empty documents.
+Read relevant code, project guidance and the document map. Reuse existing authorities and locations; missing optional records require neither setup nor empty files.
 
-When task-related document writes are authorized, save settled knowledge as it emerges:
+- **Current behavior:** update the owning contract, architecture document or README in place. Give each fact one home; link rather than duplicate it. Approved but unimplemented behavior belongs in a task or proposed decision, not current documentation.
+- **Terms and decisions:** save reusable meanings in the existing glossary (`CONTEXT.md` is valid; otherwise `GLOSSARY.md`). Write an ADR only for a costly-to-reverse, surprising choice with real alternatives. Follow project naming and retention policy, not mandatory append-only history.
+- **Active work:** use one task per bounded change needing a handoff. Reuse the tracker; otherwise use `.scratch/<slug>.md` when needed. Maintain current scope, acceptance, confirmed choices and sources, open questions, verification gaps and next action. Replace stale status, not append session summaries. New work does not extend completed tasks.
+- **Completion:** update long-term knowledge and links, retain necessary evidence, then close or remove temporary records under project policy. Without one, leave a compact closed task linking lasting outcomes. Preserve unrelated work, required audit records and irreplaceable evidence. Version control retains committed execution history.
+- **Evidence:** routine checks belong in the response. Persist only for handoff, comparison, migration or audit, with revision, environment, result and limits. Historical evidence is separate from current contracts.
 
-- **Meaning:** update the existing glossary; otherwise use `GLOSSARY.md` in the relevant context. Record only confirmed, reusable domain definitions, not implementation or progress.
-- **Decision:** write a short ADR only when the choice is costly to reverse, surprising without context, and involves real alternatives. Follow existing naming; otherwise use the next unused `docs/adr/NNNN-slug.md`. State context, decision, rejected alternative and reason.
-- **Task:** for cross-stage/session work, maintain one existing issue/spec or task record; without one use `docs/tasks/<slug>.md`. Keep scope, acceptance criteria, linked glossary/ADRs, verified progress, blockers and next step. Do not duplicate long-term knowledge here.
-
-Separate observations, accepted decisions and hypotheses; preserve the source or confirming request. Mark replaced decisions as superseded and link successors rather than erasing history. Re-read targets before editing and preserve unrelated changes. In read-only/no-file mode, provide proposed edits and identify unsaved state. Obtain authorization for external tracker writes; otherwise return a proposed update, not a claim of synchronization. At handoff, give record paths and evidence locations, marking unverified work explicitly.
+Respect document-write permission; in read-only mode identify proposed updates as unsaved. Re-read before editing. Distinguish facts, accepted decisions and hypotheses. External writes require authorization; do not initiate agent-configuration changes.
 
 ## Process
 
@@ -44,4 +44,4 @@ Separate observations, accepted decisions and hypotheses; preserve the source or
 
 Report the symptom, supported cause or ranked uncertainty, scoped change if any, commands actually run with relevant outcomes, and checks not run. Link reusable evidence using project conventions. If execution was blocked, use “unverified” rather than “fixed.”
 
-Before pausing a staged investigation, update its task record with the supported cause or remaining hypotheses, probes, evidence and next step. Persist reusable meanings and qualifying decisions under Project records; do not create a separate report for every probe. Do not invoke another workflow or modify agent instruction files/configuration.
+For an investigation needing another session, maintain a current snapshot of the symptom, supported cause or remaining hypotheses, discriminating evidence and next probe, not a probe-by-probe diary. On completion, keep useful regression protection, repair affected current documentation and close the task under project policy. A routine resolved bug needs no new investigation report. Do not invoke another workflow or modify agent instruction files/configuration.
