@@ -1,0 +1,24 @@
+{
+  "skill_name": "project-context",
+  "execution": "Run in isolated directories with old and revised skill snapshots. Preserve all inputs before each run outside the project. A separate fresh reader receives only the resulting README and follows its current-contract links to answer reader_questions; navigation reachability alone is insufficient.",
+  "evals": [{
+    "id": 1,
+    "name": "mixed-history-and-operational-reference",
+    "prompt": "整理当前项目上下文和 docs，允许更新已有 AGENTS.md。已确认现行要求：任务提交时冻结输入原始字节；连接丢失停止派发，不自动重试，恢复需重启。不要改代码、迁移、数据或已发布记录。旧设计不是待办。release-v1 是仍受支持的发布契约；migration-001.md 是仍在使用的恢复前置，必须保留原貌。其余纯开发记录可评估删除。不要为修链接扩大历史维护范围。",
+    "initial_files": {
+      "README.md": "# Dispatcher\n\nCurrent contract: [Runtime](docs/runtime.md). The [old design](docs/2026-design.md) includes implementation increments. Verify checkout with python3 app.py --help; this is not a deployment claim.\n",
+      "AGENTS.md": "# Project instructions\n\nUse README.md for current context. Historical records are not living docs: do not update them to reflect later implementation. Only explicitly requested historical correction or a material error in the original record permits changing them.\n",
+      "app.py": "import sys\nif '--help' in sys.argv:\n    print('Dispatcher: submitted bytes are frozen; session loss stops dispatch; restart required; no automatic retry.')\n",
+      "migrations/001.py": "# Recovery prerequisites: docs/migration-001.md. This released migration must not be edited by documentation cleanup.\n",
+      "docs/runtime.md": "# Current runtime\n\nConnection loss stops dispatch and requires restart. There is no automatic retry. Historical versions remain separately supported; see [v1](release-v1.md).\n",
+      "docs/2026-design.md": "# Original dispatcher design\n\n## January proposal\nAutomatically reconnect and retry jobs.\n\n## March confirmed increment\nThe accepted requirement is to freeze original input bytes on submission. Reconnect/retry was rejected; connection loss must stop dispatch until restart.\n\n## April checks\n20 synthetic jobs passed. The obsolete chart was [here](missing-chart.md).\n\n## June implementation plan\nAll steps completed; no pending work.\n",
+      "docs/closed-task.md": "# Completed implementation\n\nStatus: closed. Nothing pending. Runtime now follows the March rules. Old check commands: python3 missing-probe.py.\n",
+      "docs/migration-001.md": "# Released recovery prerequisite\n\nBefore recovery, stop all writers and restore the matching data/key pair. This document is required by migration 001. Historical optional chart: [chart](missing-recovery-chart.md).\n",
+      "docs/release-v1.md": "# Supported release v1\n\nv1 retains its original retry semantics. Do not overwrite this published contract with checkout behavior.\n",
+      "data/original.txt": "USER DATA - preserve exact bytes\n"
+    },
+    "reader_questions": ["Does the current checkout automatically retry after connection loss?", "When and in what form is input frozen?", "What action is needed to resume dispatch?", "Is the January proposal pending work, and must it be read to determine current behavior?"],
+    "expected_output": "One current owner contains all three confirmed runtime rules, without historical replay. Mixed narrative and closed task leave the current reading path. Published release, recovery prerequisite, migration code and data stay unchanged; no history catalogue is generated merely to justify retention.",
+    "assertions": ["Current authority states no retry, restart recovery and original-byte freeze without requiring dated increments.", "Obsolete mixed chronology and closed task are removed after knowledge extraction, rather than banner-repaired.", "Recovery prerequisite, supported release, migration code and user data remain byte-identical, including the historical broken link.", "Current navigation resolves; no global historical-link repair or replacement evidence/index collection is introduced.", "Fresh reader answers all current questions from current owners without replaying the old design."]
+  }]
+}

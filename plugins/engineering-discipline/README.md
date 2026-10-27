@@ -1,6 +1,6 @@
 # Engineering Discipline
 
-实验版 `0.2.1`。围绕三个检查：**Language**（含义是否一致）、**Structure**（知识和复杂性由谁承担）、**Evidence**（结论有什么证据）。文档服务于下一次正确行动，不用于证明上一次做了多少工作；不接管开发流水线。
+实验版 `0.3.0`。围绕三个检查：**Language**（含义是否一致）、**Structure**（知识和复杂性由谁承担）、**Evidence**（结论有什么证据）。文档服务于下一次正确行动，不用于证明上一次做了多少工作；不接管开发流水线。
 
 ## 使用
 
@@ -12,6 +12,7 @@ claude --plugin-dir /absolute/path/to/autoplug/plugins/engineering-discipline
 
 显式入口使用完整插件命名空间，避免与其他插件重名：
 
+- `/engineering-discipline:project-context`：显式建立、整理或校准项目上下文；既有项目核对现状并收敛，新项目只保存已确认信息，结构合理时可以不改。
 - `/engineering-discipline:grill-design`：把影响实现的设计疑点变成已确认决策或明确阻塞；不自动生成 PRD 或开始开发。
 - `/engineering-discipline:diagnose`：定位给定故障；只有用户同时授权修复才修改实现。
 - `/engineering-discipline:tdd-slice`：显式选择 test-first 时使用，在已授权范围内逐片完成 red → green → refactor；不是所有开发任务的默认入口。
@@ -30,7 +31,7 @@ claude --plugin-dir /absolute/path/to/autoplug/plugins/engineering-discipline
 npx skills add /absolute/path/to/autoplug --skill tdd-slice -a codex
 ```
 
-Codex 用 `$tdd-slice` 等名称显式选择。每个目录携带 `agents/openai.yaml`：三个流程关闭隐式调用，三个原语允许隐式调用。Claude 使用 `disable-model-invocation` 与 `user-invocable`。其他运行时可能不支持这些开关，正文仍要求显式进入流程；这些设置不是跨运行时的安全边界。
+Codex 用 `$project-context`、`$tdd-slice` 等名称显式选择。每个目录携带 `agents/openai.yaml`：四个流程关闭隐式调用，三个原语允许隐式调用。Claude 使用 `disable-model-invocation` 与 `user-invocable`。其他运行时可能不支持这些开关，正文仍要求显式进入流程；这些设置不是跨运行时的安全边界。
 
 ## 边界
 
@@ -86,6 +87,25 @@ Skill 复用项目已有的位置、权威与保留规则，不静默写入 Agen
 
 “不写代码”不等于“禁止写文档”，但明确只读时只给拟议更新并说明未保存。外部写入另需授权，不在无权限时悄悄建立第二份权威 tracker。换会话时给出实际活跃任务路径；插件不提供无上下文自动恢复器。
 
+## 建立或整理项目上下文
+
+`project-context` 是首次接手、上下文明显失序或重大结构变化时的显式入口，不是每次开发的前置步骤，也不自动启动 `grill-design` 或实现流程。
+
+```text
+/engineering-discipline:project-context
+整理当前项目的上下文与文档。允许更新已有项目级 AGENTS.md；
+不修改产品代码、运行配置、数据、图片或备份。
+```
+
+只读评估时明确“只讨论，不修改任何文件”。普通文档整理不自动授权修改 Agent 指引；未获授权的指引变更只在回复中提出，不另存一份政策。沿用目标运行时的现有入口，不同时生成重复的 AGENTS.md/CLAUDE.md，不改全局 harness 设置。
+
+已有项目先核对代码、契约、命令与已知部署边界，再确定知识归属、执行收敛并检查链接。checkout 不代表线上版本；已发布契约、运维/回滚说明和审计材料不能按流水账清除。清理授权不包含真实数据或原始产物删除。
+
+新项目只保存已确认的目标、约束、必要词汇和真实未决问题。栈与接口未定时，不虚构构建命令、架构或 API，不生成空目录。下一轮可把活跃任务交给 `grill-design` 澄清；已实现后再更新当前契约。
+
+重复运行不应为追求统一格式重新改名、排序或改写合理文档。完成报告只说明实际变更、入口、检查与阻塞，不创建永久“整理报告”。本入口独立工作，不依赖 deprecated 的 `codebase-rules-generator`。
+
+
 ## 日常使用
 
 - **小修复或普通功能：** 直接描述需求，不必先选 Skill。没有长期知识变化或交接需求时，不额外建文档。
@@ -103,13 +123,15 @@ Skill 复用项目已有的位置、权威与保留规则，不静默写入 Agen
 uv run --with PyYAML==6.0.3 python -m unittest discover -s tests -v
 ```
 
-这些检查覆盖清单、YAML/JSON、调用策略、独立分发路径及文档入口，**不评估模型行为**，也不锁定正文措辞或要求六个 Skill 复制同一段规则。
+这些检查覆盖清单、YAML/JSON、调用策略、独立分发路径及文档入口，**不评估模型行为**，也不锁定正文措辞或要求各 Skill 复制同一段规则。
 
 行为回归输入见 [evals/evals.json](evals/evals.json)，不是 Skill 运行时依赖。将其中初始文件写入隔离目录，按阶段处理同一项目；`fresh_session` 阶段换执行者，只交接当前文件，不传上一轮聊天。旧版与新版从相同输入分别运行，保留阶段产物在仓库外供比较：
 
 - 连续设计、实现、改变行为、修 bug、删除功能：既有章节是否原位更新，旧任务是否退出，是否出现按功能拆文档或验证总账。
 - 真实取舍是否产生有价值的 ADR，普通局部选择是否避免文档仪式。
 - 明确审计要求和只读限制是否仍被遵守，原始数据/备份是否未受清理影响。
+- `project-context` 的独立场景见 [上下文回归输入](skills/project-context/evals/evals.json)：存量项目保护已发布契约，新项目不虚构事实，随后换执行者再次整理以检查是否稳定。
+- [混合历史回归](skills/project-context/evals/mixed-history.json)：先提炼当前契约再处置旧记录，保护有实际恢复依赖的历史原文；不为全局链接全绿修缮历史。另由只读新执行者从当前入口回答行为问题，不把链接存在当作理解正确。
 
 这些场景检查文档演进而不是文件越少越好。打包校验不证明行为改善，少量模拟执行也不证明长期效果、隐式触发准确率或所有运行时兼容性。
 

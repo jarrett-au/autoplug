@@ -11,7 +11,7 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 PLUGIN = ROOT / "plugins" / "engineering-discipline"
-WORKFLOWS = {"grill-design", "diagnose", "tdd-slice"}
+WORKFLOWS = {"project-context", "grill-design", "diagnose", "tdd-slice"}
 PRIMITIVES = {"domain-language", "module-design", "feedback-loop"}
 NAMES = WORKFLOWS | PRIMITIVES
 

@@ -1,0 +1,6 @@
+interface:
+  display_name: "Project Context"
+  short_description: "Establish or consolidate trustworthy project context."
+  default_prompt: "Use $project-context to establish or consolidate this project's context within the requested scope, without changing product behavior."
+policy:
+  allow_implicit_invocation: false

@@ -1,0 +1,33 @@
+{
+  "skill_name": "project-context",
+  "execution": "Materialize initial_files in isolated projects. Run with the skill and a no-skill baseline from identical inputs. After each run, use a fresh executor with only the resulting project and the same request; compare bytes for needless churn. Capture reports outside the project, not as permanent project documents.",
+  "evals": [
+    {
+      "id": 1,
+      "name": "existing-project-with-published-contract",
+      "prompt": "整理本项目上下文与文档，允许更新项目级 AGENTS.md，但不改代码、数据或运行配置。当前 checkout 的已确认行为是打印 hello；生产发布仍为 v1，发布文档与原始审计材料必须保留。产品没有未完成需求，不需要新设计。清理重复、过时和已完成记录，让新会话能找到当前契约和安全验证方法。",
+      "initial_files": {
+        "AGENTS.md": "# Project instructions\n\nUse README.md as the project entry. Do not mutate application data or deployed-release records when editing docs.\n",
+        "README.md": "# Greeter\n\nCurrent checkout prints hello via python3 app.py. It has not been deployed. Current contract: [API](docs/api.md). Published v1: [release](docs/release-v1.md).\n",
+        "app.py": "print('hello')\n",
+        "docs/api.md": "# Current contract\n\nThe checkout prints goodbye.\n",
+        "docs/feature-api.md": "# Greeter feature\n\nThe checkout prints hello. This duplicates the current API responsibility.\n",
+        "docs/tasks/greeter.md": "# Greeter task\n\nStatus: completed. Current checkout prints hello. No pending product work. The only long-term fact belongs to the API contract.\n",
+        "docs/check.md": "# Run diary\n\nSession 1: edited greeting. Session 2: python3 app.py printed hello. This is routine historical output with no retention requirement.\n",
+        "docs/release-v1.md": "# Published v1\n\nv1 prints goodbye. Consumers still use this published release; keep this contract until release support ends.\n",
+        "audit/receipt.txt": "Required immutable release receipt: v1, original count 8.\n",
+        "data/original.txt": "User data: do not modify.\n"
+      },
+      "expected_output": "A single current contract describes hello; published v1 and protected bytes remain intact. Completed task and redundant narratives leave current context. No speculative scaffold or setup is introduced.",
+      "assertions": ["Code, user data, published release and audit receipt remain byte-identical.", "One current contract agrees with hello and checkout is not called deployed.", "Completed task and duplicate feature authority are removed without a new archive/report collection.", "Current entry links resolve and a fresh reader can identify the safe CLI command.", "Fresh repeated execution leaves an adequate project unchanged."]
+    },
+    {
+      "id": 2,
+      "name": "new-project-with-unresolved-stack",
+      "prompt": "为新项目建立最小上下文。目标是离线检查用户提供的 CSV，输出无效行的位置，不上传数据。技术栈、CLI 形状和错误规则尚未决定，不要替我选择，也不写代码。允许创建 README.md 和项目级 AGENTS.md；本项目明确使用 AGENTS.md 作为人工与 Agent 阅读入口，无需宣称任何运行时自动加载。保存下一轮 grill-design 所需的真实问题，不要先运行其他工作流。",
+      "initial_files": {},
+      "expected_output": "Confirmed goal and offline constraint are saved, undecided choices stay pending, and a real design handoff exists without imaginary architecture or executable commands.",
+      "assertions": ["No implementation, dependency/tool configuration or invented run/build command is created.", "Confirmed offline scope is distinguished from unresolved stack, CLI and error decisions.", "No empty architecture, ADR, index, evidence or parallel instruction-file scaffold is generated.", "A fresh reader can locate the next design question without prior conversation.", "Fresh repeated execution leaves an adequate project unchanged."]
+    }
+  ]
+}
