@@ -77,8 +77,9 @@ npx skills add jarrett-au/autoplug --skill code-simplifier -g -a claude-code -y
 
 ### engineering-discipline — 实验性工程纪律
 
-独立的设计澄清、问题诊断与行为切片 TDD，不依赖旧版测试 Skill，不自动接管现有流水线。
+独立的项目上下文整理、设计澄清、问题诊断与行为切片 TDD，不依赖旧版测试 Skill，不自动接管现有流水线。
 
+- `/engineering-discipline:project-context`：建立或收敛项目上下文，复用已有结构，不生成文档骨架或清理流水账。
 - `/engineering-discipline:grill-design`：澄清影响实现的决策，返回验收例子和明确边界。
 - `/engineering-discipline:diagnose`：用症状敏感的证据定位问题，在授权范围内修复。
 - `/engineering-discipline:tdd-slice`：显式选择 test-first 时，按行为切片完成已授权范围并报告真实验证结果。
