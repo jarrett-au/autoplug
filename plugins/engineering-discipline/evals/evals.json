@@ -43,6 +43,46 @@
         "The active task remains resumable; current README and implementation still describe the in-memory dispatcher.",
         "No empty architecture tree, index, template, evidence directory or agent configuration is generated."
       ]
+    },
+    {
+      "id": 3,
+      "name": "existing-design-owner-and-pause-save",
+      "prompt": "Check that design-only work still maintains its authorized local record, including when a consequential question requires a pause.",
+      "initial_files": {
+        "README.md": "# Exporter\n\nCurrent behavior exports a local file only. Sharing is not implemented.\n",
+        "app.py": "print('local export')\n",
+        "docs/design/share-export.md": "# Share export\n\nNo sharing behavior has been confirmed.\n"
+      },
+      "phases": [
+        {"name": "pause-and-save", "skills": ["grill-design"], "prompt": "使用 grill-design 设计分享导出：确认生成一次性下载链接，链接 15 分钟过期。不写代码、不进入实现。重试由调用者还是导出器负责尚未决定；先给推荐，再只问这个会影响责任归属的问题。"}
+      ],
+      "expected_output": "The existing design record is updated before the pause, with a recommendation and one ownership question; no separate save confirmation is requested.",
+      "assertions": [
+        "Confirmed decisions are saved to the existing design document before pausing for retry ownership.",
+        "The response recommends an owner and asks only the consequential unresolved question, without requesting another save confirmation.",
+        "Confirmed awaiting-implementation behavior, observed current behavior and unexecuted acceptance examples are distinct; current README and product code remain unchanged.",
+        "No duplicate ADR, task or design record, full specification, implementation or repository-wide documentation audit is produced."
+      ]
+    },
+    {
+      "id": 4,
+      "name": "correction-replaces-design-with-minimal-fallback",
+      "prompt": "Check that a user correction replaces the current design and that a new record is created only when handoff content needs a home.",
+      "initial_files": {
+        "README.md": "# Download\n\nCurrent downloads require an authenticated session.\n",
+        "app.py": "print('authenticated download')\n"
+      },
+      "phases": [
+        {"name": "initial-design", "skills": ["grill-design"], "prompt": "使用 grill-design 设计下载授权，先采用服务端会话，24 小时过期。不写代码。"},
+        {"name": "correct-design", "skills": ["grill-design"], "prompt": "修正刚才设计：服务端会话方案已否定，改用无状态签名 URL，15 分钟过期；本期不支持主动撤销。直接更新最终设计，不写代码。"}
+      ],
+      "expected_output": "One minimal design handoff contains only the corrected current proposal, without turning the rejected approach into an open alternative or work item.",
+      "assertions": [
+        "With no existing owner, exactly one minimal local design record is created; no mandatory document tree, routine ADR or current README rewrite is introduced.",
+        "The correction replaces the server-session choice, which does not remain as a current alternative, open question or next step.",
+        "The record distinguishes confirmed unimplemented behavior from observed current behavior and labels any acceptance examples as unexecuted.",
+        "No implementation or full specification starts, and the final response reports the resulting handoff rather than replaying the full interview framework."
+      ]
     }
   ]
 }

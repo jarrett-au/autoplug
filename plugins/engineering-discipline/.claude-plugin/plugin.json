@@ -1,6 +1,6 @@
 {
   "name": "engineering-discipline",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "实验性工程纪律：项目上下文整理、设计澄清、证据诊断与切片 TDD；维护当前知识，不积累执行日志",
   "author": {
     "name": "Jarrett",

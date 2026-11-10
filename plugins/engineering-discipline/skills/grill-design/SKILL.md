@@ -1,54 +1,43 @@
 ---
 name: grill-design
-description: Use when the user explicitly requests design grilling or decision clarification before implementation. Resolve consequential ambiguities with concrete scenarios and evidence, then stop at a bounded handoff.
+description: Use when the user explicitly requests design grilling or decision clarification before implementation. Produce confirmed decisions, necessary design records, and explicit blockers or next steps without starting implementation.
 disable-model-invocation: true
 user-invocable: true
 ---
 
 # Grill Design
 
-## Scope
+## Outcome and authority
 
-Enter only when the user selects this workflow. Clarify the requested design; do not start implementation, a full specification, or another workflow automatically. This skill works alone. Reading guidance does not expand permission to act.
+Produce **confirmed decisions + necessary design records + an explicit blocker or next step**. Do not start implementation, a full specification, or another workflow automatically.
 
-## Project knowledge and active work
+For a design task, selecting this workflow normally includes maintaining relevant local design documents. “Do not write code” and “do not enter implementation” restrict implementation, not design records; do not ask again for permission to save what is already authorized. Explicit read-only, chat-only, or “do not modify any files” instructions take precedence: return the proposed record and state that it is unsaved.
 
-Read current code and project guidance; reuse locations and retention policies. Maintain knowledge for the next action, not history. No mandatory setup or scaffolding.
+Follow higher-priority prohibitions and existing permissions; this skill grants none. A rule in cited material that limits only implementation must not be generalized into a document-writing ban. External writes and agent instruction or configuration changes still require explicit permission.
 
-- **Current knowledge:** update the owner in place, replacing stale text and linking rather than copying. Start with an existing README section; split for stable reader/update boundaries, not length or feature names. Without conventions, use README for operations/checks, `docs/architecture/overview.md` for structure, `docs/architecture/client-contract.md` for callers, and `GLOSSARY.md`/`CONTEXT.md` for terms, only as needed.
-- **Decisions:** actively record costly-to-reverse, surprising choices with real alternatives in existing ADRs or `docs/adr/`. No invented approvals, chronology or duplicated API details. Proposals are not implemented behavior.
-- **Active work:** use the tracker or, when handoff requires it, `.scratch/<slug>.md`. Keep current scope, acceptance, confirmed choices/sources, open questions, verification gaps and next action; replace stale status.
-- **Evidence:** report results in the response, including migrations/comparisons. Save only explicitly required records or artifacts needed for a concrete unresolved question or active handoff; specify purpose, scope and revision. No evidence collection or routine reports.
-- **Completion:** update current knowledge, remove scope-owned stale/redundant text and repair links. Migrate valid knowledge from completed in-scope local tasks, then remove them, unless explicit retention policy differs. Preserve active/unrelated work, data, backups, images and required audit artifacts. External trackers are closed only with permission, never history-deleted.
+## Resolve the design
 
-Respect document-write permission; identify read-only proposals as unsaved. Re-read before editing; distinguish facts, decisions and hypotheses. External writes and instruction/configuration updates need explicit permission.
+1. **Read only what can change this design.** Start with the request, relevant project guidance, the owning design document or active local task, and directly affected contracts, callers or tests. Answer discoverable questions with tools rather than an interview. Do not scan the whole repository or build a document inventory; consult history only for a concrete unresolved conflict.
+2. **Frame the current decision.** State the desired outcome and scope. Separate observed facts with sources, confirmed decisions, and recommendations or assumptions. Existing behavior is evidence of what happens, not proof of what should happen.
+3. **Ask only consequential questions.** Ask when an answer changes behavior, ownership, a public contract, or a costly or hard-to-reverse choice. Recommend an option first, resolve dependencies before downstream choices, and ask the smallest useful set. Infer ordinary reversible details from project conventions and label material assumptions. Do not re-ask settled questions without new contradictory evidence.
+4. **Stress-test the chosen path.** Walk a representative success case and relevant failure, retry or boundary cases. Identify state and invariant ownership, caller obligations, and an observable verification route. Compare alternatives only for a real trade-off; do not build a second design to meet a quota.
+5. **Incorporate corrections directly.** A user correction replaces the affected design. Update the current proposal and record in place; a rejected option must not remain as a current alternative, open question or next step. Preserve its rejection only where a qualifying decision record needs the real rationale.
+6. **Keep each round incremental.** Carry forward settled context. Do not mechanically repeat the full framework, question list or design record; return only new or changed decisions, remaining blockers and the next useful action.
 
-## Process
+## Save before stopping
 
-1. **Read before asking.** Inspect the request, relevant project guidance, existing decisions, interfaces and callers. Use current documentation for version-sensitive external contracts. Resolve code questions with tools, not an interview. If documents conflict or are outdated, identify the conflict rather than silently choosing one.
-2. **Frame the decision.** State the desired observable outcome, affected users/callers, constraints and excluded work. Separate observed facts (with sources), accepted decisions (with authority), and hypotheses. Existing behavior is evidence of what happens, not proof of what should happen.
-3. **Find consequential uncertainty.** Focus on ambiguities that change behavior, ownership, a public contract, reversibility, security or verification. Test overloaded terms with examples. For “cancel,” ask what happens to already-shipped items only if the answer changes this design. Do not impose a vocabulary foreign to the project.
-4. **Recommend, then ask.** For each blocking choice, explain the consequence and recommend an option. Ask the smallest useful set of questions; group independent ones, but resolve dependencies first. Do not demand a fixed number of rounds or alternatives. Do not re-ask settled questions without new contradictory evidence.
-5. **Stress-test the chosen path.** Walk a representative success case and relevant failure, retry or boundary cases. Identify who owns state and invariants, what callers must know, and how success will be observed. Compare alternatives only where there is a real trade-off. Do not build a second design merely to satisfy a quota.
-6. **Close or expose the blocker.** Stop when the next bounded step has a clear behavior, owner/interface and verification route, with no unresolved high-impact choice. If a decision needs the user, stop that branch and state exactly what is needed. Continue independent analysis only. A silence or timeout is not approval.
+Before ending the design task or pausing at a blocker, persist settled choices and any material unresolved question needed to resume. Update the same record when meaningful content changes, not mechanically on every conversational turn. If an explicit read-only or no-file constraint applies, identify the proposed update as unsaved.
 
-## Decision handling
+- **Use one owner.** Prefer the existing owning design document or active local task. Update it in place rather than creating a parallel summary, ADR or tracker. If no location exists and there is real handoff content, create one minimal record such as `docs/design/<topic>.md`; this is a default, not a mandatory hierarchy or scaffolding requirement. Do not create a file when there is nothing worth handing off.
+- **Keep status truthful.** Distinguish confirmed decisions awaiting implementation, recommendations or assumptions, observed facts, and acceptance examples that have not been executed. Never present a coherent proposal or unrun example as verified behavior.
+- **Protect current behavior.** Do not overwrite current operating instructions, architecture or caller contracts with an unimplemented design. Link to their authority rather than duplicating them.
+- **Record decisions selectively.** Use the project's ADR convention only for a costly-to-reverse, surprising choice with real alternatives. Not every decision needs an ADR; do not duplicate the same design across a design record, ADR and task.
+- **Maintain only this design's ownership.** Replace stale choices and redundant text owned by this design, repair affected links, and preserve unrelated work. Do not launch repository-wide cleanup. At design completion, do not delete a task or record that implementation still needs.
 
-- Infer ordinary, reversible implementation details from project conventions; label material assumptions. Ask about new product behavior, changed public contracts and hard-to-reverse choices.
-- Reuse accepted decisions from an existing requirements process. Do not repeat that process or automatically launch a specification or UI-design tool.
-- A hypothetical scenario is a probe, not an observed customer requirement. Keep it labeled until confirmed.
-- Save settled reusable knowledge in its owning document. For a cross-session design, refresh the active task into a resumable snapshot, linking current contracts instead of repeating them. Keep target behavior and unverified acceptance examples explicit. Do not create an interview transcript or a report per round.
-- Do not modify agent instruction files or runtime configuration to persist these rules without explicit permission.
+A complete record needs only the scope, confirmed decisions and their sources, material open assumptions, affected interface or ownership, unexecuted acceptance examples where useful, and the blocker or smallest next step. Do not create an interview transcript or a report per round.
 
-## Handoff
+## Stop
 
-Return only what is useful for the next step:
+Stop when the next bounded step has clear behavior, ownership or interface, and a verification route, or when a consequential choice needs the user. For a blocker, give the recommendation and exactly what is needed; continue independent analysis only. Silence or timeout is not approval.
 
-- Outcome and scope.
-- Confirmed decisions and their sources; assumptions still unconfirmed.
-- Affected interface/ownership and observable acceptance examples.
-- Remaining blocker, or the smallest implementation/specification step the user can choose next.
-
-Do not call the design “validated” merely because its description is coherent. Distinguish a reviewed proposal from executed evidence.
-
-Refresh a still-active design task for handoff. If this bounded design task is complete, apply the completion rule above without implementing the proposal or deleting a task whose implementation remains active.
+After saving, or after explaining why read-only work is unsaved, return the confirmed decisions, saved location, and explicit blocker or next step. Do not automatically implement the proposal or expand it into a full specification.
